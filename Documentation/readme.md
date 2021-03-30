@@ -10,16 +10,16 @@ User stories
 
 
 - Vad behöver vi?
--- En tärning.
--- 2-4 spelare.
--- En spelplan.
--- En spelmotor.
--- Resultattavla.
--- Spelregler.
--- Spelpjäser (4 per spelare).
--- Spar/laddfunktion.
--- Pjäsbo.
--- Start/slut.
+- - En tärning.
+- - 2-4 spelare.
+- - En spelplan.
+- - En spelmotor.
+- - Resultattavla.
+- - Spelregler.
+- - Spelpjäser (4 per spelare).
+- - Spar/laddfunktion.
+- - Pjäsbo.
+- - Start/slut.
 
 
 - Kravlista
