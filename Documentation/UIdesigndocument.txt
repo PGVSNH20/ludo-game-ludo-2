@@ -1,0 +1,34 @@
+1234 i rätt färg, fyra st per spelare.
+Representerar varje spelares pjäser.
+@ är bon, varje spelares hembas.
+% är målet.
+
+---------
+PRE-GAME
+---------
+LL    OOO  GG     OOO
+LL   OO OO G  G  OO OO
+LLLL  OOO  GGGG   OOO
+[1.Start new game][2.Continue][3.Exit]
+
+---------
+STARTING NEW GAME
+---------
+Choose number of players (1-4): INPUT
+
+---------
+NEW GAME
+---------
+[Player 1]'s turn, press a key to roll the dice!
+
+12**##@**12
+34**###**34
+****###****
+****###****
+@##########
+#####%#####
+##########@
+****###****
+****###****
+12**###**12
+34**@##**34
