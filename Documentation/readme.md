@@ -33,3 +33,40 @@ User stories
 - - Flera spel ska kunna vara igång. 
 - - Dokumentation i form av User Stories, CRC cards, Use Case diagram.
 
+
+- Elementlista
+- - Meny class(skapa nytt spel/välj spelare/ladda/)
+- - Gameboard class(positioner, start/slut, synkad med drawfunktionen)
+- -- Antal rutor, 
+- - Rules class
+- - Player class(placera pjäser?)
+- - - GamePieces, Color, Amount, Referenst till
+- - Nest
+- -- Player, GamePieces
+- - GamePieces class
+- - - Amount, Color, Player, 
+- - Dice class(Vilken klass löser vem turs? )
+- - - Randomfunktion, Startkast
+- - GameLogic(movement, sonderar planen, kontrollfunktion, validering)
+- - Game class(information kring pågående spel, navigering, antal spelare, poäng, loggar information till DB)
+- - Draw element(Skriver ut varje rad till brädet)
+- - Databas(load/save funktion)
+- - Enhetstest
+
+2020-03-30 Introduktion och planering till Fia-spelet
+
+---
+
+- Gjort i dag
+- - Skrivit 6 st userstories.
+- - Vad vi behöver för delar i programmet lista
+- - Kortfattad kravlista med saker att tänka på under arbetets gång.
+- - Planering för datastrukturen såsom klasser med egenskaper och funktioner
+- -  Arbetsupplägg med metoder
+
+- Planering till morgondagen
+- - Implementera en programstruktur med klass modeller
+- - Få in enhetstester
+- - Installera externa moduler såsom Entity Framework
+- - Databasschemat
+
