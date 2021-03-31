@@ -70,3 +70,21 @@ User stories
 - - Installera externa moduler såsom Entity Framework
 - - Databasschemat
 
+2020-03-31 Introduktion och planering till Fia-spelet
+
+---
+
+- Gjort i dag
+- - Mattias anmälde sig till och göra en scrollbarmeny
+- - UseCase gjorda
+- - CRC cards påbörjade
+- - Implementerat klasser och modeller
+- - Krattat väg för databas
+- - Implementerat ett enhetstest till projektet
+
+- Planering till morgondagen
+- - Påminna Mattias om att han anmält sig till att göra en scrollbarmeny
+- - Lära oss mer om tester 
+- - Forsätta koda
+- - Hitta en bra grund till drawing
+- - Lära oss om multipla char arrayer av mån av tid
