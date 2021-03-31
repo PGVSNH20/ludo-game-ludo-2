@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+using Xunit;
 
-namespace GameEngine
+namespace LudoTest
 {
-    class DbModel : DbContext
+    
+    class InputTest
     {
     }
 }
