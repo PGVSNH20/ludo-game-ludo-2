@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Interfaces
 {
-    interface ILudoBoard
+    public interface ILudoBoard
     {
-        object[][] GameBoard { get; set; }
+        object[,]GameBoard { get; set; }
 
         void MovePiece(GamePiece piece, int diceRoll);
 

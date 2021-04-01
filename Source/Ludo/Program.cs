@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using GameEngine;
 
 namespace Ludo
 {
@@ -18,7 +19,8 @@ namespace Ludo
 
             //Console.ForegroundColor
             //    = ConsoleColor.Blue;
-
+            Rules rules = new Rules();
+            Game game = new Game(rules);
             
         }
     }

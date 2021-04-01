@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    class Rules
+    public class Rules
     {
         public int NumberOfPlayers { get; set; }
         public int PiecesPerPlayer { get; set; }

@@ -10,17 +10,21 @@ namespace GameEngine
     /// <summary>
     /// Overlying logic for how the game should run
     /// </summary>
-    class Game : ILudoBoard
+    public class Game : ILudoBoard
     {
+        //TODO: Interface för object på vårt gameboard. Byta ut object till interfacet.
+        public object[,] GameBoard { get; set; }
         public static Rules Rules;
         private Dice dice = new Dice();
 
         public Game(Rules rules)
         {
+            GameBoard = new object[11, 11];
             Rules = rules;
             List<Player> players = AddPlayer(rules.NumberOfPlayers);
         }
-        
+                      
+
         /// <summary>
         /// Populate a list of players.
         /// </summary>
@@ -36,6 +40,26 @@ namespace GameEngine
             }
 
             return players;
+        }
+
+        public void CheckGameState()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Knuff(GamePiece piece)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void MovePiece(GamePiece piece, int diceRoll)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryMove(int posX, int posY)
+        {
+            throw new NotImplementedException();
         }
     }
 }

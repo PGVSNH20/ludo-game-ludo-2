@@ -2,7 +2,7 @@
 
 namespace GameEngine
 {
-    class Dice
+    public class Dice
     {
         public int Roll()
         {

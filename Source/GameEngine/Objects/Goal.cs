@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine
+namespace GameEngine.Objects
 {
-    class Draw
+    class Goal
     {
-
     }
 }
