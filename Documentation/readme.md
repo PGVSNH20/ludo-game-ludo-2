@@ -88,3 +88,17 @@ User stories
 - - Forsätta koda
 - - Hitta en bra grund till drawing
 - - Lära oss om multipla char arrayer av mån av tid
+
+2020-04-01 Introduktion och planering till Fia-spelet
+
+--- 
+
+- Gjort idag
+- - Jens har påminnt Mattias om Meny
+- - Skapat Test som testar Dice!!!
+- - Implementerat Interface till Game
+- - Skapat tvådimensionell Gameboard
+
+- Planering till 5/4
+- - Interface för object på vårt gameboard. Byta ut object till interfacet.
+
