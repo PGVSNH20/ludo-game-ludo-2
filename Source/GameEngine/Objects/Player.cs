@@ -8,13 +8,12 @@ namespace GameEngine
         public static List<GamePiece> Pieces;
         public static ConsoleColor Color;
 
-        public Player(ConsoleColor color)
+        public Player(int numberOfPieces, ConsoleColor color)
         {
             Color = color;
-
             Pieces = new List<GamePiece>();
-            //TODO: Get how many pieces we should have from somewhere
-            for (int i = 0; i < 4; i++)
+
+            for (int i = 0; i < numberOfPieces; i++)
             {
                 Pieces.Add(new GamePiece());
             }
