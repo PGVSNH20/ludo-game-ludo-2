@@ -8,17 +8,8 @@ namespace Ludo
     {
         static void Main(string[] args)
         {
-            //Console.WriteLine("Hello World!");
+            Draw.Update(Draw.Scene.MainMenu);
 
-            //char hello = '@';
-            //Console.ForegroundColor = hello == '@' ? ConsoleColor.Cyan : ConsoleColor.White;
-            //Console.Write(hello);
-
-            //Console.ForegroundColor = ConsoleColor.Red;
-            //Console.Write('@');
-
-            //Console.ForegroundColor
-            //    = ConsoleColor.Blue;
             Rules rules = new Rules();
             Game game = new Game(rules);
             
