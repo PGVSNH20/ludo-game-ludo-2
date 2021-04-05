@@ -41,7 +41,7 @@ namespace GameEngine
 
             for (int i = 0; i < NumberOfPlayers; i++)
             {
-                players.Add(new Player(Rules.PiecesPerPlayer, ConsoleColor.Cyan));
+                players.Add(new Player(Rules.PiecesPerPlayer, ConsoleColor.Cyan)); // Ändrar kanske här
             }
 
             return players;
@@ -86,6 +86,11 @@ namespace GameEngine
                     {
                         drawableChars.Add(new DrawableChar('#', ConsoleColor.Red));
                     }
+                    else if (current.GetType() == typeof(InnerSteppingStone))
+                    {
+                        var steppingStone = (current as InnerSteppingStone);
+                        drawableChars.Add(new DrawableChar(steppingStone.CharToDraw, ConsoleColor.DarkBlue));
+                    }
                     else if (current.GetType() == typeof(GamePiece))
                     {
                         drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));
@@ -94,7 +99,6 @@ namespace GameEngine
                     {
                         drawableChars.Add(new DrawableChar((current as EmptySpace).CharToDraw));
                     }
-
                     else
                     {
                         drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));
@@ -106,4 +110,6 @@ namespace GameEngine
             return drawableChars;
         }
     }
+
+    
 }

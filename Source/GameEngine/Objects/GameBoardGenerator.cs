@@ -22,6 +22,7 @@ namespace GameEngine.Objects
 
             gameBoard = PopulateWithNests(gameBoard, players);
             gameBoard = PopulateWithEmptySpaces(gameBoard);
+            gameBoard = PopulateWithInnerPath(gameBoard);
 
 
             return gameBoard;
@@ -60,16 +61,21 @@ namespace GameEngine.Objects
             var emptySpaces = new EmptySpace();
 
             foreach (var entryPoint in emptySpaces.GetEmptySpacesOnBoardFromEntryPoints())
-                for (int i = 0; i < gameBoard.GetLength(0); i++)
-                    for (int j = 0; j < gameBoard.GetLength(1); j++)
-                    {
-                        var position = new Position(j, i);
-                        if (position.Row == entryPoint.Position.Row && position.Col == entryPoint.Position.Col )
-                        {
-                            gameBoard[j, i] = new EmptySpace();
-                        }
-                    }
+                for (int row = 0; row < gameBoard.GetLength(0); row++)
+                    for (int col = 0; col < gameBoard.GetLength(1); col++)
+                        if (row == entryPoint.Position.Row && col == entryPoint.Position.Col)
+                            gameBoard[col, row] = new EmptySpace();
 
+            return gameBoard;
+        }
+        public static object[,] PopulateWithInnerPath(object[,] gameBoard)
+        {
+
+            for (int row = 0; row < gameBoard.GetLength(0); row++)
+                for (int col = 0; col < gameBoard.GetLength(1); col++)
+                    if (Player.GetAllInnerPaths().Any(p => p.Col == col && p.Row == row))
+                            gameBoard[col, row] = new InnerSteppingStone();
+                    
             return gameBoard;
         }
     }
