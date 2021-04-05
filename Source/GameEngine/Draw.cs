@@ -27,6 +27,7 @@ namespace GameEngine
         //TODO: Bigger draws might need own class, mainly the game's draw.
         public static void Update(Scene scene)
         {
+            Console.Clear();
             switch (scene)
             {
                 case Scene.MainMenu:
