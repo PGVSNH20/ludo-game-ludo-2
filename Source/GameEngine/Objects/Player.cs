@@ -6,7 +6,7 @@ namespace GameEngine
     public class Player
     {
         public static List<GamePiece> Pieces;
-        public static ConsoleColor Color;
+        public ConsoleColor Color;
 
         public Player(int numberOfPieces, ConsoleColor color)
         {

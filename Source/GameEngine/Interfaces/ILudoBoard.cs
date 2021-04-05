@@ -8,7 +8,7 @@ namespace GameEngine.Interfaces
 {
     public interface ILudoBoard
     {
-        object[,]GameBoard { get; set; }
+        static object[,]GameBoard { get; set; }
 
         void MovePiece(GamePiece piece, int diceRoll);
 

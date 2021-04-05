@@ -18,12 +18,13 @@ namespace GameEngine
         public static Rules Rules;
         private Dice dice = new Dice();
         public static string statusMessage { get; set; }
+        public static List<Player> Players { get; set; }
 
         public Game(Rules rules)
         {
             Rules = rules;
-            List<Player> players = AddPlayers(rules.NumberOfPlayers);
-            GameBoard = GameBoardGenerator.Generate(11, 11, players);
+            Players = AddPlayers(rules.NumberOfPlayers);
+            GameBoard = GameBoardGenerator.Generate(11, 11, Players);
             
             //Dictionary for status messages?
         }
@@ -75,9 +76,23 @@ namespace GameEngine
             {
                 for (int j = 0; j < GameBoard.GetLength(1); j++)
                 {
-                    if (GameBoard[i, j].GetType() == typeof(Nest))
+                    var current = GameBoard[i, j];
+                    if (current.GetType() == typeof(Nest))
                     {
-                        drawableChars.Add(new DrawableChar());
+                        ConsoleColor currentColor = Players[(current as Nest).PlayerId].Color;                       
+                        drawableChars.Add(new DrawableChar((current as Nest).CharToDraw, currentColor));
+                    }
+                    else if (current.GetType() == typeof(Path))
+                    {
+                        drawableChars.Add(new DrawableChar('#', ConsoleColor.Red));
+                    }
+                    else if (current.GetType() == typeof(GamePiece))
+                    {
+                        drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));
+                    }
+                    else
+                    {
+                        drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));
                     }
                 }
             }

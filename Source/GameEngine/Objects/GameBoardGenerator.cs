@@ -28,10 +28,27 @@ namespace GameEngine.Objects
 
         public static object[,] PopulateWithNests(object[,] gameBoard, List<Player> players)
         {
-            //Place nests
             if (players.Count == 4)
             {
-                gameBoard[5, 0] = new Nest();
+                gameBoard[0, 4] = new Nest(0);
+                gameBoard[6, 0] = new Nest(1);
+                gameBoard[10, 6] = new Nest(2);
+                gameBoard[4, 10] = new Nest(3);
+            }
+            else if (players.Count == 3)
+            {
+                gameBoard[0, 4] = new Nest(0);
+                gameBoard[6, 0] = new Nest(1);
+                gameBoard[10, 6] = new Nest(2);
+            }
+            else if (players.Count == 2)
+            {
+                gameBoard[0, 4] = new Nest(0);
+                gameBoard[10, 6] = new Nest(1);
+            }
+            else
+            {
+                throw new Exception("Du får inte spela själv!");
             }
 
 

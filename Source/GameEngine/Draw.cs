@@ -80,8 +80,8 @@ namespace GameEngine
                     Console.WriteLine();
                 }
                 
-                Console.ForegroundColor = drawableGameBoard[i].color;
-                Console.Write(drawableGameBoard[i].character);
+                Console.ForegroundColor = drawableGameBoard[i].Color;
+                Console.Write(drawableGameBoard[i].Character);
                 
                 Console.ForegroundColor = previousColor;
             }

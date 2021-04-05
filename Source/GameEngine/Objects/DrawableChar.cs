@@ -8,7 +8,13 @@ namespace GameEngine.Objects
 {
     public class DrawableChar
     {
-        public char character { get; set; }
-        public ConsoleColor color { get; set; }
+        public char Character { get; set; }
+        public ConsoleColor Color { get; set; }
+
+        public DrawableChar(char character, ConsoleColor color)
+        {
+            Character = character;
+            Color = color;
+        }
     }
 }

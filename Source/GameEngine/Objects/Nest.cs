@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace GameEngine
 {
-    class Nest
+    public class Nest
     {
         public int PlayerId { get; set; }
-        public char CharToDraw { get; set; }
+        public char CharToDraw => '@';
 
         //Colorful.Console(nest.ToString(), Players[nest.PlayerId].Color);
 
         public override string ToString() => CharToDraw.ToString();
+
+        public Nest(int playerID)
+        {
+            PlayerId = playerID;
+        }
         
     }
 }
