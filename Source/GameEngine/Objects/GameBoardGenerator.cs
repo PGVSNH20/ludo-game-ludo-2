@@ -21,6 +21,7 @@ namespace GameEngine.Objects
             }
 
             gameBoard = PopulateWithNests(gameBoard, players);
+            gameBoard = PopulateWithEmptySpaces(gameBoard);
 
 
             return gameBoard;
@@ -31,9 +32,9 @@ namespace GameEngine.Objects
             if (players.Count == 4)
             {
                 gameBoard[0, 4] = new Nest(0);
-                gameBoard[6, 0] = new Nest(1);
-                gameBoard[10, 6] = new Nest(2);
-                gameBoard[4, 10] = new Nest(3);
+                gameBoard[4, 0] = new Nest(1);
+                gameBoard[6, 10] = new Nest(2);
+                gameBoard[10, 4] = new Nest(3);
             }
             else if (players.Count == 3)
             {
@@ -51,6 +52,23 @@ namespace GameEngine.Objects
                 throw new Exception("Du får inte spela själv!");
             }
 
+
+            return gameBoard;
+        }
+        public static object[,] PopulateWithEmptySpaces(object[,] gameBoard)
+        {
+            var emptySpaces = new EmptySpace();
+
+            foreach (var entryPoint in emptySpaces.GetEmptySpacesOnBoardFromEntryPoints())
+                for (int i = 0; i < gameBoard.GetLength(0); i++)
+                    for (int j = 0; j < gameBoard.GetLength(1); j++)
+                    {
+                        var position = new Position(j, i);
+                        if (position.Row == entryPoint.Position.Row && position.Col == entryPoint.Position.Col )
+                        {
+                            gameBoard[j, i] = new EmptySpace();
+                        }
+                    }
 
             return gameBoard;
         }

@@ -90,6 +90,11 @@ namespace GameEngine
                     {
                         drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));
                     }
+                    else if (current.GetType() == typeof(EmptySpace))
+                    {
+                        drawableChars.Add(new DrawableChar((current as EmptySpace).CharToDraw));
+                    }
+
                     else
                     {
                         drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));

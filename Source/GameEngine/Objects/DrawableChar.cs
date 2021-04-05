@@ -11,6 +11,10 @@ namespace GameEngine.Objects
         public char Character { get; set; }
         public ConsoleColor Color { get; set; }
 
+        public DrawableChar(char character) // Jens har varit här och jiddrat
+        {
+            Character = character;
+        }
         public DrawableChar(char character, ConsoleColor color)
         {
             Character = character;
