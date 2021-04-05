@@ -13,7 +13,7 @@ namespace GameEngine.Objects
 
         public static char Character => (char)32;
 
-        public Position Position { get;}
+        public Position Position { get; }
         public EmptySpace()
         {
 
@@ -32,11 +32,6 @@ namespace GameEngine.Objects
             _emptySpaces = new List<EmptySpace>(); // (64)??
             object[,] gameBoard = new object[11, 11];
 
-            var entryPoint1 = new Position(0, 0); // (0,0)
-            var entryPoint2 = new Position(7, 0); // (7,0)
-            var entryPoint3 = new Position(0, 7); // (0,7)
-            var entryPoint4 = new Position(7, 7); // (0,0)
-
             List<Position> entryPoints = new List<Position>()
             {
                 new Position(0,0),
@@ -45,19 +40,23 @@ namespace GameEngine.Objects
                   new Position(7, 7)
             };
 
-
             var epDimension = 4; // width/height
 
             foreach (var entryPoint in entryPoints) // checkar för varje entrypoint
                 for (int row = 0; row < gameBoard.GetLength(0); row++)
                     for (int col = 0; col < gameBoard.GetLength(1); col++)
                     {
-                        if ((row >= entryPoint.Row && row < entryPoint.Row + epDimension)  &&  (col >= entryPoint.Col && col < entryPoint.Row + epDimension))
-                        {
-                            var emptyPosition = new Position(row, col);
-                            _emptySpaces.Add(new EmptySpace(emptyPosition));
+                        var emptyPosition = new Position(row, col);
+                        bool isMatchingPosition = emptyPosition.Row == entryPoint.Row && emptyPosition.Col == entryPoint.Col;
 
-                        }
+                        if (isMatchingPosition)
+                            for (int rowRange = 0; rowRange < epDimension; rowRange++)
+                                for (int colRange = 0; colRange < epDimension; colRange++)
+                                {
+                                    emptyPosition = new Position(row + rowRange, col + colRange);
+                                    _emptySpaces.Add(new EmptySpace(emptyPosition));
+                                }
+
                     }
             return _emptySpaces;
 

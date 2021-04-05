@@ -31,7 +31,7 @@ namespace GameEngine.Objects
         {
             if (players.Count == 4)
             {
-                gameBoard[0, 4] = new Nest(0);
+                gameBoard[0, 6] = new Nest(0);
                 gameBoard[4, 0] = new Nest(1);
                 gameBoard[6, 10] = new Nest(2);
                 gameBoard[10, 4] = new Nest(3);
