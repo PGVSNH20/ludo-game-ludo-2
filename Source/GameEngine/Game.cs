@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameEngine.Interfaces;
+using GameEngine.Objects;
 
 namespace GameEngine
 {
@@ -13,15 +14,18 @@ namespace GameEngine
     public class Game : ILudoBoard
     {
         //TODO: Interface för object på vårt gameboard. Byta ut object till interfacet.
-        public object[,] GameBoard { get; set; }
+        public static object[,] GameBoard { get; set; }
         public static Rules Rules;
         private Dice dice = new Dice();
+        public static string statusMessage { get; set; }
 
         public Game(Rules rules)
         {
-            GameBoard = new object[11, 11];
             Rules = rules;
-            List<Player> players = AddPlayer(rules.NumberOfPlayers);
+            List<Player> players = AddPlayers(rules.NumberOfPlayers);
+            GameBoard = GameBoardGenerator.Generate(11, 11, players);
+            
+            //Dictionary for status messages?
         }
                       
 
@@ -30,7 +34,7 @@ namespace GameEngine
         /// </summary>
         /// <param name="NumberOfPlayers">How many players there are</param>
         /// <returns>A list populated with players</returns>
-        private List<Player> AddPlayer(int NumberOfPlayers)
+        private List<Player> AddPlayers(int NumberOfPlayers)
         {
             List<Player> players = new List<Player>();
 
@@ -60,6 +64,26 @@ namespace GameEngine
         public bool TryMove(int posX, int posY)
         {
             throw new NotImplementedException();
+        }
+
+
+        public static List<DrawableChar> GenerateDrawable()
+        {
+            List<DrawableChar> drawableChars = new List<DrawableChar>();
+
+            for (int i = 0; i < GameBoard.GetLength(0); i++)
+            {
+                for (int j = 0; j < GameBoard.GetLength(1); j++)
+                {
+                    if (GameBoard[i, j].GetType() == typeof(Nest))
+                    {
+                        drawableChars.Add(new DrawableChar());
+                    }
+                }
+            }
+
+
+            return drawableChars;
         }
     }
 }

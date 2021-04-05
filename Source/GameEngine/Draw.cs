@@ -4,6 +4,7 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Objects;
 
 namespace GameEngine
 {
@@ -39,6 +40,12 @@ namespace GameEngine
                     //Display options
                     break;
 
+                case Scene.Game:
+                    DrawBoard();
+                    //DrawScoreBoard();
+                    //DrawGameStatus();
+                    break;
+
             }
         }
 
@@ -57,6 +64,27 @@ namespace GameEngine
         private static void DrawMainMenu()
         {
             Console.WriteLine("Hello, this is main menu.");
+        }
+
+        private static void DrawBoard()
+        {
+            var drawableGameBoard = Game.GenerateDrawable();
+
+            for (int i = 0; i < drawableGameBoard.Count; i++)
+            {
+                var previousColor = Console.ForegroundColor;
+
+                //TODO: Better way of getting width
+                if (i % 11 == 0)
+                {
+                    Console.WriteLine();
+                }
+                
+                Console.ForegroundColor = drawableGameBoard[i].color;
+                Console.Write(drawableGameBoard[i].character);
+                
+                Console.ForegroundColor = previousColor;
+            }
         }
 
         #endregion

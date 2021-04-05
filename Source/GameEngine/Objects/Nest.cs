@@ -10,5 +10,10 @@ namespace GameEngine
     {
         public int PlayerId { get; set; }
         public char CharToDraw { get; set; }
+
+        //Colorful.Console(nest.ToString(), Players[nest.PlayerId].Color);
+
+        public override string ToString() => CharToDraw.ToString();
+        
     }
 }
