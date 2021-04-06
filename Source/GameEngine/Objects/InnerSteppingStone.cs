@@ -9,6 +9,6 @@ namespace GameEngine.Objects
 {
     public class InnerSteppingStone : IBoardObject
     {
-        public char CharToDraw => 'O';
+        public  char CharToDraw => 'O';
     }
 }

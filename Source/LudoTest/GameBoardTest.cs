@@ -1,4 +1,5 @@
 ﻿using GameEngine;
+using GameEngine.Interfaces;
 using GameEngine.Objects;
 using System;
 using System.Collections.Generic;
@@ -29,7 +30,7 @@ namespace LudoTest
         {
 
             //Arrange:
-            object[,] gameBoard = new object[11, 11];
+            IBoardObject[,] gameBoard = new IBoardObject[11, 11];
             int counter = 0;
             //Action: 
             for (int i = 0; i < gameBoard.GetLength(0); i++)

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ namespace GameEngine.Objects
 {
     public class GameBoardGenerator // satt den som public Jens för test
     {
-        public static object[,] Generate(int columns, int rows, List<Player> players)
+        public static IBoardObject[,] Generate(int columns, int rows, List<Player> players)
         {
-            object[,] gameBoard = new object[columns, rows];
+            IBoardObject[,] gameBoard = new IBoardObject[columns, rows];
 
             for (int i = 0; i < gameBoard.GetLength(0); i++) // Kanske göra detta till en metod eller för enhetstest eller populera arrayen någon annanstans
             {
@@ -28,7 +29,7 @@ namespace GameEngine.Objects
             return gameBoard;
         }
 
-        public static object[,] PopulateWithNests(object[,] gameBoard, List<Player> players)
+        public static IBoardObject[,] PopulateWithNests(IBoardObject[,] gameBoard, List<Player> players)
         {
             if (players.Count == 4)
             {
@@ -56,7 +57,7 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
-        public static object[,] PopulateWithEmptySpaces(object[,] gameBoard)
+        public static IBoardObject[,] PopulateWithEmptySpaces(IBoardObject[,] gameBoard)
         {
             var emptySpaces = new EmptySpace();
 
@@ -68,7 +69,7 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
-        public static object[,] PopulateWithInnerPath(object[,] gameBoard)
+        public static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard)
         {
 
             for (int row = 0; row < gameBoard.GetLength(0); row++)

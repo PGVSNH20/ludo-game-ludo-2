@@ -14,7 +14,7 @@ namespace GameEngine
     public class Game : ILudoBoard
     {
         //TODO: Interface för object på vårt gameboard. Byta ut object till interfacet.
-        public static object[,] GameBoard { get; set; }
+        public static IBoardObject[,] GameBoard { get; set; }
         public static Rules Rules;
         private Dice dice = new Dice();
         public static string statusMessage { get; set; }
