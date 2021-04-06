@@ -10,5 +10,12 @@ namespace GameEngine.Objects
     public class InnerSteppingStone : IBoardObject
     {
         public  char CharToDraw => 'O';
+
+        public int PlayerId { get; set; }
+
+        public InnerSteppingStone(int playerID)
+        {
+            PlayerId = playerID;
+        }
     }
 }

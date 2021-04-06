@@ -25,31 +25,31 @@ namespace LudoTest
 
             Assert.Equal(4, Game.Players.Count);
         }
-        [Fact]
-        public void Create_A_List_Of_Five_Steppingstones_In_InnerPath()
-        {
+        //[Fact]
+        //public void Create_A_List_Of_Five_Steppingstones_In_InnerPath()
+        //{
 
-            //Arrange:
-            IBoardObject[,] gameBoard = new IBoardObject[11, 11];
-            int counter = 0;
-            //Action: 
-            for (int i = 0; i < gameBoard.GetLength(0); i++)
-                for (int j = 0; j < gameBoard.GetLength(1); j++) 
-                    gameBoard[i, j] = new Path();
+        //    //Arrange:
+        //    IBoardObject[,] gameBoard = new IBoardObject[11, 11];
+        //    int counter = 0;
+        //    //Action: 
+        //    for (int i = 0; i < gameBoard.GetLength(0); i++)
+        //        for (int j = 0; j < gameBoard.GetLength(1); j++) 
+        //            gameBoard[i, j] = new Path();
                        
-            gameBoard = GameBoardGenerator.PopulateWithInnerPath(gameBoard);
+        //    gameBoard = GameBoardGenerator.PopulateWithInnerPath(gameBoard);
 
-            for (int i = 0; i < gameBoard.GetLength(0); i++)
-                for (int j = 0; j < gameBoard.GetLength(1); j++)
-                    if (gameBoard[i, j].GetType() == typeof(InnerSteppingStone))
-                        ++counter;
+        //    for (int i = 0; i < gameBoard.GetLength(0); i++)
+        //        for (int j = 0; j < gameBoard.GetLength(1); j++)
+        //            if (gameBoard[i, j].GetType() == typeof(InnerSteppingStone))
+        //                ++counter;
 
-            var innerpathList = counter / 4;
+        //    var innerpathList = counter / 4;
 
-            //Expect: 
+        //    //Expect: 
 
-            Assert.Equal(5, innerpathList);
-        }
+        //    Assert.Equal(5, innerpathList);
+        //}
 
     }
 }

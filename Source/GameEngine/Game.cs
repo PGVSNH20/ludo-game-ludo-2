@@ -88,12 +88,13 @@ namespace GameEngine
                     }
                     else if (current.GetType() == typeof(Path))
                     {
-                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.Red));
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.Gray));
                     }
                     else if (current.GetType() == typeof(InnerSteppingStone))
                     {
-                        var steppingStone = (current);
-                        drawableChars.Add(new DrawableChar(steppingStone.CharToDraw, ConsoleColor.DarkBlue));
+                        ConsoleColor currentColor = Players[(current as InnerSteppingStone).PlayerId].Color;
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, currentColor));
+
                     }
                     else if (current.GetType() == typeof(GamePiece))
                     {
