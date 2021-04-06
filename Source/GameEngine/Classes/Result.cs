@@ -10,6 +10,7 @@ namespace GameEngine.Objects
     {
         public override string ToString()
         {
+            // Drawain component
             Console.WriteLine("BlueTeam: [3] Home"); Console.WriteLine("BlueTeam:[1] Goal");
             Console.WriteLine("RedTeam: [3] Home"); Console.WriteLine("Team: [1] Goal");
             Console.WriteLine("Team: [3] Home"); Console.WriteLine("Team: [1] Goal");
