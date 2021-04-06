@@ -24,6 +24,7 @@ namespace GameEngine.Objects
             gameBoard = PopulateWithNests(gameBoard, players); // Ytterligare en metod för population?
             gameBoard = PopulateWithEmptySpaces(gameBoard);
             gameBoard = PopulateWithInnerPath(gameBoard);
+            gameBoard = PopulateWithGoal(gameBoard);
 
 
             return gameBoard;
@@ -57,6 +58,14 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
+
+        public static IBoardObject[,] PopulateWithGoal(IBoardObject[,] gameBoard)
+        {
+            gameBoard[5, 5] = new Goal();
+
+            return gameBoard;
+        }
+
         public static IBoardObject[,] PopulateWithEmptySpaces(IBoardObject[,] gameBoard)
         {
             var emptySpaces = new EmptySpace();
@@ -69,6 +78,7 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
+
         public static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard)
         {
 

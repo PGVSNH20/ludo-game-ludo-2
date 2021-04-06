@@ -20,9 +20,8 @@ namespace GameEngine
 
             for (int i = 0; i < numberOfPieces; i++)
             {
-                //TODO: FIX!
-                var test = (char)(i + 1);
-                Pieces.Add(new GamePiece((char)(i+1), playerId));
+                char pieceNumber = (i + 1).ToString()[0];
+                Pieces.Add(new GamePiece(pieceNumber, playerId));
             }
         }
 

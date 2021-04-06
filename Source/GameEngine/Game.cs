@@ -103,6 +103,10 @@ namespace GameEngine
                     {
                         drawableChars.Add(new DrawableChar(current.CharToDraw));
                     }
+                    else if (current.GetType() == typeof(Goal))
+                    {
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.White));
+                    }
                     else
                     {
                         drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));
