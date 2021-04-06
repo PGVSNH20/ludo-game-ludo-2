@@ -26,7 +26,7 @@ namespace GameEngine
 
         //TODO: Where and how should input be handled? Should we have an input manager-class/thingy or something that calls Draw?
         //TODO: Bigger draws might need own class, mainly the game's draw.
-        public static void Update(Scene scene)
+        public static void Update(Scene scene, Game game = null)
         {
             Console.Clear();
             switch (scene)
@@ -43,7 +43,17 @@ namespace GameEngine
                 case Scene.Game:
                     DrawBoard();
                     //DrawScoreBoard();
-                    //DrawGameStatus();
+                    DrawGameStatus(game.StatusMessage);
+                    DrawGameActionStatus(game.ActionMessage);
+                    
+                    /*
+                    INSERT BEAUTIFUL BOARD THAT JENS APPROVED THE COLORS OF
+
+                    Player Red knocked out Player Blue's piece.
+                    Player Green's turn. Roll the dice!
+                    
+                    ...
+                    */
                     break;
 
             }
@@ -85,6 +95,17 @@ namespace GameEngine
                 
                 Console.ForegroundColor = previousColor;
             }
+            Console.WriteLine();
+        }
+
+        private static void DrawGameActionStatus(string message)
+        {
+            Console.WriteLine(message);
+        }
+
+        private static void DrawGameStatus(string message)
+        {
+            Console.WriteLine(message);
         }
 
         #endregion

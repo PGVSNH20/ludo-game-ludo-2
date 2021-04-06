@@ -13,7 +13,7 @@ namespace Ludo
             Rules rules = new Rules();
             Game game = new Game(rules);
 
-            Draw.Update(Draw.Scene.Game);
+            //Draw.Update(Draw.Scene.Game);
         }
     }
 }

@@ -13,29 +13,98 @@ namespace GameEngine
     /// </summary>
     public class Game : ILudoBoard
     {
-        //TODO: Interface för object på vårt gameboard. Byta ut object till interfacet.
         public static IBoardObject[,] GameBoard { get; set; }
         public static Rules Rules;
         private Dice dice = new Dice();
-        public static string statusMessage { get; set; }
+        public string StatusMessage { get; set; }
+        public string ActionMessage { get; set; }
         public static List<Player> Players { get; set; }
+
+        //Whose turn is it
+        private int activePlayer = 0;
 
         public Game(Rules rules)
         {
+            //Initializing
             Rules = rules;
             Players = AddPlayers(rules.NumberOfPlayers);
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
-            
-            //Dictionary for status messages?
+
+            //TODO: Dictionary for status messages?
+
+            //Initial variables
+            StatusMessage = "";
+            ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice."; //Get player color in some way
+            int diceRoll;
+
+            ////////////////////Game loop
+            bool running = true;
+            while (running)
+            {
+                ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice."; //Get player color in some way
+                Update();
+                ConsoleKeyInfo input = Console.ReadKey();
+
+                //TODO: Validate input
+                switch (input.Key)
+                {
+                    case ConsoleKey.Spacebar:
+
+                        diceRoll = dice.Roll();
+
+                        StatusMessage = $"You rolled {diceRoll}!";
+
+                        //MOVEMENT LOGIC
+
+                        //TODO: Player can put piece on board
+                        if (diceRoll == 1 || diceRoll == 6)
+                        {
+                            //Put piece on board
+                            ActionMessage = $"fix";
+                            Update();
+                        }
+
+                        //TODO: If player has more than one piece on the board, let player choose piece
+                        StatusMessage = $"You rolled {diceRoll}!";
+                        ActionMessage = "Choose which piece to move...";
+                        Update();
+
+                        string inputLine;
+                        while (true)
+                        {
+                            //TODO: Validate input with selectable pieces
+                            inputLine = Console.ReadLine();
+
+                            if (int.TryParse(inputLine, out int validInput) && validInput >= 1 && validInput <= 4) //TODO: list of valid pieces contains?
+                            {
+                                break;
+                            }
+                        }
+
+                        StatusMessage = $"You chose piece {inputLine}!";
+                        ActionMessage = "";
+                        Update();
+
+                        //TODO: Movement stuff
+                        //Check path if valid and stuff 
+
+                        break;
+
+                }
+
+                EndTurn();
+            }
         }
-                      
+
+        private void Update() => Draw.Update(Draw.Scene.Game, this);
+
+        private void EndTurn() => activePlayer = activePlayer >= Rules.NumberOfPlayers - 1 ? 0 : activePlayer + 1;
 
         /// <summary>
         /// Populate a list of players.
         /// </summary>
         /// <param name="NumberOfPlayers">How many players there are</param>
         /// <returns>A list populated with players</returns>
-        
         private List<Player> AddPlayers(int NumberOfPlayers)
         {
             List<Player> players = new List<Player>();
@@ -83,7 +152,7 @@ namespace GameEngine
                     var current = GameBoard[i, j];
                     if (current.GetType() == typeof(Nest))
                     {
-                        ConsoleColor currentColor = Players[(current as Nest).PlayerId].Color;                       
+                        ConsoleColor currentColor = Players[(current as Nest).PlayerId].Color;
                         drawableChars.Add(new DrawableChar(current.CharToDraw, currentColor));
                     }
                     else if (current.GetType() == typeof(Path))
@@ -94,7 +163,6 @@ namespace GameEngine
                     {
                         ConsoleColor currentColor = Players[(current as InnerSteppingStone).PlayerId].Color;
                         drawableChars.Add(new DrawableChar(current.CharToDraw, currentColor));
-
                     }
                     else if (current.GetType() == typeof(GamePiece))
                     {
@@ -120,5 +188,5 @@ namespace GameEngine
         }
     }
 
-    
+
 }
