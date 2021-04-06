@@ -35,13 +35,17 @@ namespace GameEngine
         /// </summary>
         /// <param name="NumberOfPlayers">How many players there are</param>
         /// <returns>A list populated with players</returns>
+        
         private List<Player> AddPlayers(int NumberOfPlayers)
         {
             List<Player> players = new List<Player>();
 
+            var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Blue };
+
             for (int i = 0; i < NumberOfPlayers; i++)
             {
-                players.Add(new Player(Rules.PiecesPerPlayer, ConsoleColor.Cyan)); // Ändrar kanske här
+                // TODO:Låta spelare välja färg??
+                players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i)); // Ändrar kanske här
             }
 
             return players;
@@ -80,24 +84,24 @@ namespace GameEngine
                     if (current.GetType() == typeof(Nest))
                     {
                         ConsoleColor currentColor = Players[(current as Nest).PlayerId].Color;                       
-                        drawableChars.Add(new DrawableChar((current as Nest).CharToDraw, currentColor));
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, currentColor));
                     }
                     else if (current.GetType() == typeof(Path))
                     {
-                        drawableChars.Add(new DrawableChar('#', ConsoleColor.Red));
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.Red));
                     }
                     else if (current.GetType() == typeof(InnerSteppingStone))
                     {
-                        var steppingStone = (current as InnerSteppingStone);
+                        var steppingStone = (current);
                         drawableChars.Add(new DrawableChar(steppingStone.CharToDraw, ConsoleColor.DarkBlue));
                     }
                     else if (current.GetType() == typeof(GamePiece))
                     {
-                        drawableChars.Add(new DrawableChar('%', ConsoleColor.DarkYellow));
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.DarkYellow));
                     }
                     else if (current.GetType() == typeof(EmptySpace))
                     {
-                        drawableChars.Add(new DrawableChar((current as EmptySpace).CharToDraw));
+                        drawableChars.Add(new DrawableChar(current.CharToDraw));
                     }
                     else
                     {

@@ -9,16 +9,20 @@ namespace GameEngine
         private List<Position> innerPath;
 
         public static List<GamePiece> Pieces;
+       
         public ConsoleColor Color;
 
-        public Player(int numberOfPieces, ConsoleColor color)
+        public Player(int numberOfPieces, ConsoleColor color, int playerId)
         {
             Color = color;
             Pieces = new List<GamePiece>();
 
+
             for (int i = 0; i < numberOfPieces; i++)
             {
-                Pieces.Add(new GamePiece());
+                //TODO: FIX!
+                var test = (char)(i + 1);
+                Pieces.Add(new GamePiece((char)(i+1), playerId));
             }
         }
 

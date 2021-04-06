@@ -8,6 +8,6 @@ namespace GameEngine.Interfaces
 {
     public interface IBoardObject
     {
-        public char CharToDraw { get; }
+        public char CharToDraw { get;}
     }
 }
