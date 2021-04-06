@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Objects
 {
-    class Path
+    public class Path // Jens ändrat till public för test
     {
         public char CharToDraw = '#';
     }

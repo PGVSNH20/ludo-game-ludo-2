@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Objects
 {
-    class GameBoardGenerator
+    public class GameBoardGenerator // satt den som public Jens för test
     {
         public static object[,] Generate(int columns, int rows, List<Player> players)
         {
             object[,] gameBoard = new object[columns, rows];
 
-            for (int i = 0; i < gameBoard.GetLength(0); i++)
+            for (int i = 0; i < gameBoard.GetLength(0); i++) // Kanske göra detta till en metod eller för enhetstest eller populera arrayen någon annanstans
             {
                 for (int j = 0; j < gameBoard.GetLength(1); j++)
                 {
@@ -20,7 +20,7 @@ namespace GameEngine.Objects
                 }
             }
 
-            gameBoard = PopulateWithNests(gameBoard, players);
+            gameBoard = PopulateWithNests(gameBoard, players); // Ytterligare en metod för population?
             gameBoard = PopulateWithEmptySpaces(gameBoard);
             gameBoard = PopulateWithInnerPath(gameBoard);
 

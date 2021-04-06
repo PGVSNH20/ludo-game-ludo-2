@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Objects
 {
-    class InnerSteppingStone : IBoardObject
+    public class InnerSteppingStone : IBoardObject
     {
         public char CharToDraw => 'O';
     }
