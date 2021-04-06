@@ -53,7 +53,7 @@ User stories
 - - Databas(load/save funktion)
 - - Enhetstest
 
-2020-03-30 Introduktion och planering till Fia-spelet
+2021-03-30 Introduktion och planering till Fia-spelet
 
 ---
 
@@ -70,7 +70,7 @@ User stories
 - - Installera externa moduler såsom Entity Framework
 - - Databasschemat
 
-2020-03-31 Introduktion och planering till Fia-spelet
+2021-03-31 Introduktion och planering till Fia-spelet
 
 ---
 
@@ -89,7 +89,7 @@ User stories
 - - Hitta en bra grund till drawing
 - - Lära oss om multipla char arrayer av mån av tid
 
-2020-04-01 Introduktion och planering till Fia-spelet
+2021-04-01 Introduktion och planering till Fia-spelet
 
 --- 
 
@@ -101,4 +101,22 @@ User stories
 
 - Planering till 5/4
 - - Interface för object på vårt gameboard. Byta ut object till interfacet.
+
+2021-04-06
+
+---
+
+- Gjort idag
+- - Mattias påminde sig själv om Meny
+- - Skapat och implementerat ett interface för BoardObject
+- - Strukturerat upp färgerna på vårt GameBoard
+- - Påbörjat en GameLoop där vi kan RollDice, välja vilken GamePiece som ska flyttas samt rotera bland spelarna
+- - Jens har lagt in lite fler enhetstester
+
+- Planering till 7/4 (Belindas födelsedag!!)
+- - Skriva fler enhetstester.
+- - Lösa så att våra GamePieces faktiskt kan flytta på sig.
+- - Jens vill pilla med sina färger. 
+- - Strukturera upp databasen?
+- - Resultatbräde
 
