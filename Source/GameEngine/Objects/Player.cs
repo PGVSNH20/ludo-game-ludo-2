@@ -6,6 +6,9 @@ namespace GameEngine
 {
     public class Player
     {
+
+        public Position StartPosition { get; }
+
         private List<Position> innerPath;
 
         public static List<GamePiece> Pieces;
