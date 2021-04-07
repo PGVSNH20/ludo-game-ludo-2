@@ -154,13 +154,13 @@ namespace GameEngine.Objects
             return innerPathsToTravel;
         }
 
-        public List<Position> GetRoadToTravelFromPlayerSpecification(Player player)
+        public List<Position> GetRoadToTravelFromPlayerSpecification(Position startPosition)
         {
            
             var travelPlan = new List<Position>();
             Position ableToWalkInnerPath;
           
-            if (player.StartPosition.Row == StartPosition1.Row && player.StartPosition.Col == StartPosition1.Col)
+            if (startPosition.Row == StartPosition1.Row && startPosition.Col == StartPosition1.Col)
             {
                 travelPlan.AddRange(GetAllPathsToTraverse()[0].Skip(1));
                 travelPlan.AddRange(GetAllPathsToTraverse()[1]);
@@ -173,7 +173,7 @@ namespace GameEngine.Objects
                 travelPlan.AddRange(GetAllInnerPaths()[0]);
 
             }
-            else if (player.StartPosition.Row == StartPosition2.Row && player.StartPosition.Col == StartPosition2.Col)
+            else if (startPosition.Row == StartPosition2.Row && startPosition.Col == StartPosition2.Col)
             {
                 travelPlan.AddRange(GetAllPathsToTraverse()[1].Skip(1));
                 travelPlan.AddRange(GetAllPathsToTraverse()[2]);
@@ -186,7 +186,7 @@ namespace GameEngine.Objects
                 travelPlan.AddRange(GetAllInnerPaths()[1]);
 
             }
-            else if (player.StartPosition.Row == StartPosition3.Row && player.StartPosition.Col == StartPosition3.Col)
+            else if (startPosition.Row == StartPosition3.Row && startPosition.Col == StartPosition3.Col)
             {
                 travelPlan.AddRange(GetAllPathsToTraverse()[2].Skip(1));
                 travelPlan.AddRange(GetAllPathsToTraverse()[3]);
@@ -198,7 +198,7 @@ namespace GameEngine.Objects
                 // Innerpath
                 travelPlan.AddRange(GetAllInnerPaths()[2]);
             }
-            else if (player.StartPosition.Row == StartPosition4.Row && player.StartPosition.Col == StartPosition4.Col)
+            else if (startPosition.Row == StartPosition4.Row && startPosition.Col == StartPosition4.Col)
             {
                 travelPlan.AddRange(GetAllPathsToTraverse()[3].Skip(1));
                 travelPlan.AddRange(GetAllPathsToTraverse()[0]);

@@ -13,6 +13,7 @@ namespace GameEngine
         public char CharToDraw { get; }
         public int PlayerId { get; set; }
 
+        
         public bool IsPlacedOnBoard { get; set; } = false;
 
         public Position Position { get; set; }

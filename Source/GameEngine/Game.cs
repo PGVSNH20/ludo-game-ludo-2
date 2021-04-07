@@ -118,6 +118,7 @@ namespace GameEngine
         /// <returns>A list populated with players</returns>
         private List<Player> AddPlayers(int NumberOfPlayers)
         {
+            var roadMap = new Roadmap();
             List<Player> players = new List<Player>();
 
             var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Blue };
@@ -127,11 +128,14 @@ namespace GameEngine
             {
                 // TODO:Låta spelare välja färg??
                 players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i)); // Ändrar kanske här
+                
                 players[i].StartPosition = startPositons[i];
 
                 foreach (var gamePiece in players[i].Pieces)
-                    gamePiece.Position = players[i].StartPosition;
-                
+                    gamePiece.Position = startPositons[i];
+
+                players[i].TravelPlan = roadMap.GetRoadToTravelFromPlayerSpecification(new Position(startPositons[i].Col, startPositons[i].Row));
+
             }
 
             return players;
@@ -151,7 +155,7 @@ namespace GameEngine
         {
 
             var roadMap = new Roadmap();
-            roadMap.TravelPlan = roadMap.GetRoadToTravelFromPlayerSpecification(Players[activePlayer]);
+            roadMap.TravelPlan = roadMap.GetRoadToTravelFromPlayerSpecification(currentPostion);
 
             //var startFromPosition = roadMap.TravelPlan.Where(p => p.Row == currentPostion.Row && p.Col == currentPostion.Col).Select()).First();
             var startFromPosition = roadMap.TravelPlan.FindIndex((p => p.Row == currentPostion.Row && p.Col == currentPostion.Col));

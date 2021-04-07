@@ -11,6 +11,9 @@ namespace GameEngine
 
         private List<Position> innerPath;
 
+
+        public Position TravelPlan { get; set; }
+
         public  List<GamePiece> Pieces;
        
         public ConsoleColor Color;
