@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Classes;
 
 namespace GameEngine.Objects
 {
@@ -45,7 +46,6 @@ namespace GameEngine.Objects
                 {
                     endPosition1,
                     startPosition1,
-                    new Position(6, 1),
                     new Position(6, 2),
                     new Position(6, 3),
                     new Position(6, 4),
@@ -61,6 +61,7 @@ namespace GameEngine.Objects
                     startPosition2,
                     new Position(1, 4),
                     new Position(2, 4),
+                    new Position(6, 1),
                     new Position(3, 4),
                     new Position(4, 4),
 

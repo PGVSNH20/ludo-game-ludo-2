@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Classes;
 
 namespace GameEngine.Interfaces
 {
@@ -10,9 +11,9 @@ namespace GameEngine.Interfaces
     {
         static object[,]GameBoard { get; set; }
 
-        void MovePiece(GamePiece piece, int diceRoll);
+        bool MovePiece(GamePiece piece, int diceRoll);
 
-        bool TryMove(int posX, int posY);
+        bool TryMove(Position position);
 
         void Knuff(GamePiece piece);
 

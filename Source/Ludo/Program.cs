@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using GameEngine;
+using GameEngine.Classes;
 
 namespace Ludo
 {

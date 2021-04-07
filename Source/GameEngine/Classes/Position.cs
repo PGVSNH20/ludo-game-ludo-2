@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Objects
+namespace GameEngine.Classes
 {
     public struct Position
     {

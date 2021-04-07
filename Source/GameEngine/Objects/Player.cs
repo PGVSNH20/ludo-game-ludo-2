@@ -1,6 +1,7 @@
 ﻿using GameEngine.Objects;
 using System;
 using System.Collections.Generic;
+using GameEngine.Classes;
 
 namespace GameEngine
 {
@@ -11,15 +12,15 @@ namespace GameEngine
 
         private List<Position> innerPath;
 
-        public static List<GamePiece> Pieces;
+        public List<GamePiece> Pieces;
        
         public ConsoleColor Color;
 
-        public Player(int numberOfPieces, ConsoleColor color, int playerId)
+        public Player(int numberOfPieces, ConsoleColor color, int playerId, Position startPosition)
         {
             Color = color;
             Pieces = new List<GamePiece>();
-
+            StartPosition = startPosition;
 
             for (int i = 0; i < numberOfPieces; i++)
             {

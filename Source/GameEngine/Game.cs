@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Classes;
 using GameEngine.Interfaces;
 using GameEngine.Objects;
 
@@ -14,6 +15,10 @@ namespace GameEngine
     public class Game : ILudoBoard
     {
         public static IBoardObject[,] GameBoard { get; set; }
+        public static IBoardObject[,] OriginalGameBoard { get; set; }
+
+        private static List<Position> Traversable = TraversablePath.CreatePath();
+
         public static Rules Rules;
         private Dice dice = new Dice();
         public string StatusMessage { get; set; }
@@ -29,6 +34,7 @@ namespace GameEngine
             Rules = rules;
             Players = AddPlayers(rules.NumberOfPlayers);
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
+            OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
 
             //TODO: Dictionary for status messages?
 
@@ -56,10 +62,13 @@ namespace GameEngine
 
                         //MOVEMENT LOGIC
 
+                        //DEBUG: Remove/move later
+                        PlacePieceOnBoard(activePlayer);
+
                         //TODO: Player can put piece on board
                         if (diceRoll == 1 || diceRoll == 6)
                         {
-                            //Put piece on board
+                            //TODO: Put piece on board and fix with rules
                             ActionMessage = $"fix";
                             Update();
                         }
@@ -77,6 +86,8 @@ namespace GameEngine
 
                             if (int.TryParse(inputLine, out int validInput) && validInput >= 1 && validInput <= 4) //TODO: list of valid pieces contains?
                             {
+                                //TODO: Validate the move
+                                MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
                                 break;
                             }
                         }
@@ -87,6 +98,8 @@ namespace GameEngine
 
                         //TODO: Movement stuff
                         //Check path if valid and stuff 
+                        
+
 
                         break;
 
@@ -113,11 +126,36 @@ namespace GameEngine
 
             for (int i = 0; i < NumberOfPlayers; i++)
             {
-                // TODO:Låta spelare välja färg??
-                players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i)); // Ändrar kanske här
+                //TODO: Let players change color?
+                //TODO: Fix this, positions and stuff
+                players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i, new Position(5,0)));
             }
 
             return players;
+        }
+
+        private void PlacePieceOnBoard(int playerId)
+        {
+            var player = Players[playerId];
+
+            //TODO: Fix piece logic
+            GameBoard[player.StartPosition.Col, player.StartPosition.Row] = player.Pieces[0];
+        }
+
+        public Position FindObject(IBoardObject[,] board, IBoardObject obj)
+        {
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i, j].Equals(obj))
+                    {
+                        return new Position(i, j);
+                    }
+                }
+            }
+
+            return new Position();
         }
 
         public void CheckGameState()
@@ -130,14 +168,49 @@ namespace GameEngine
             throw new NotImplementedException();
         }
 
-        public void MovePiece(GamePiece piece, int diceRoll)
+        public bool MovePiece(GamePiece piece, int diceRoll)
         {
-            throw new NotImplementedException();
+            Position position = FindObject(GameBoard, piece);
+            Position newPosition = new Position();
+
+            int traversablePos = -1;
+            for (int i = 0; i < Traversable.Count; i++)
+            {
+                if (Traversable[i].Col == position.Col && Traversable[i].Row == position.Row)
+                {
+                    traversablePos = i;
+                }
+            }
+
+            if (traversablePos == -1)
+            {
+                //Couldn't find position
+                return false;
+            }
+
+            for (int i = 0; i < diceRoll; i++)
+            {
+                if (!TryMove(Traversable[traversablePos]))
+                {
+                    //Move failed
+                    return false;
+                }
+
+                //TODO: Check out of range
+                newPosition = Traversable[traversablePos + i];
+            }
+
+            GameBoard[newPosition.Col, newPosition.Row] = piece;
+            GameBoard[position.Col, position.Row] = OriginalGameBoard[position.Col, position.Row];
+
+            return true;
         }
 
-        public bool TryMove(int posX, int posY)
+        public bool TryMove(Position position)
         {
-            throw new NotImplementedException();
+            //TODO: Check if can move
+
+            return true;
         }
 
 
