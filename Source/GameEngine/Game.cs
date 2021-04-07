@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GameEngine.Classes;
 using GameEngine.Interfaces;
@@ -49,12 +50,12 @@ namespace GameEngine
             {
                 ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice."; //Get player color in some way
                 Update();
-                ConsoleKeyInfo input = Console.ReadKey();
+                var input = GetInput();
 
                 //TODO: Validate input
-                switch (input.Key)
+                switch (input)
                 {
-                    case ConsoleKey.Spacebar:
+                    case ' ':
 
                         diceRoll = dice.Roll();
 
@@ -62,47 +63,84 @@ namespace GameEngine
 
                         //MOVEMENT LOGIC
 
-                        //DEBUG: Remove/move later
-                        PlacePieceOnBoard(activePlayer);
-
                         //TODO: Player can put piece on board
-                        if (diceRoll == 1 || diceRoll == 6)
+                        if ((diceRoll == 1 || diceRoll == 6) && PiecesOnBoard(activePlayer) < Rules.PiecesPerPlayer)
                         {
-                            //TODO: Put piece on board and fix with rules
-                            ActionMessage = $"fix";
-                            Update();
-                        }
-
-                        //TODO: If player has more than one piece on the board, let player choose piece
-                        StatusMessage = $"You rolled {diceRoll}!";
-                        ActionMessage = "Choose which piece to move...";
-                        Update();
-
-                        string inputLine;
-                        while (true)
-                        {
-                            //TODO: Validate input with selectable pieces
-                            inputLine = Console.ReadLine();
-
-                            if (int.TryParse(inputLine, out int validInput) && validInput >= 1 && validInput <= 4) //TODO: list of valid pieces contains?
+                            if (PiecesOnBoard(activePlayer) == 0)
                             {
-                                //TODO: Validate the move
-                                MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
-                                break;
+                                StatusMessage = $"You rolled {diceRoll} and placed a piece on the board!";
+                                PlacePieceOnBoard(activePlayer);
+                            }
+                            else
+                            {
+                                StatusMessage = $"You rolled {diceRoll}! You can place a new piece on the board or move one.";
+                                ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
+
+                                while (true)
+                                {
+                                    Update();
+                                    char tempInput = GetInput();
+
+                                    if (tempInput == ' ')
+                                    {
+                                        PlacePieceOnBoard(activePlayer);
+                                        break;
+                                    }
+                                    //TODO: Validate that the piece is on the board and maybe make a function for this to avoid redundancy
+                                    else if (int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
+                                    {
+                                        //TODO: Validate the move
+                                        MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
+                                        break;
+                                    }
+
+                                    StatusMessage = $"That didn't seem right, try again.";
+                                    ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
+                                }
+                            }
+
+
+                            ////TODO: Put piece on board and fix with rules
+                            //PlacePieceOnBoard(activePlayer);
+                            //ActionMessage = $"fix";
+                            //Update();
+                        }
+                        else
+                        {
+                            //TODO: Update code to the above which is newer)
+                            if (PiecesOnBoard(activePlayer) == 0)
+                            {
+                                StatusMessage = $"You rolled {diceRoll}!";
+                                ActionMessage = "But you need 1 or 6 to put a piece on the board...";
+                                Update();
+                                Thread.Sleep(1500);
+                            }
+                            else
+                            {
+                                StatusMessage = $"You rolled {diceRoll}!";
+                                ActionMessage = "Choose which piece to move...";
+                                Update();
+                                while (true)
+                                {
+                                    //TODO: Validate input with selectable pieces
+                                    var tempInput = GetInput();
+
+                                    //TODO: Validate that the piece is on the board
+                                    if (int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
+                                    {
+                                        //TODO: Validate the move
+                                        MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
+
+                                        StatusMessage = $"You chose piece {tempInput}!";
+                                        ActionMessage = "";
+                                        Update();
+                                        break;
+                                    }
+                                }
                             }
                         }
 
-                        StatusMessage = $"You chose piece {inputLine}!";
-                        ActionMessage = "";
-                        Update();
-
-                        //TODO: Movement stuff
-                        //Check path if valid and stuff 
-                        
-
-
                         break;
-
                 }
 
                 EndTurn();
@@ -113,6 +151,12 @@ namespace GameEngine
 
         private void EndTurn() => activePlayer = activePlayer >= Rules.NumberOfPlayers - 1 ? 0 : activePlayer + 1;
 
+        private char GetInput()
+        {
+            ConsoleKeyInfo input = Console.ReadKey();
+            return input.KeyChar;
+        }
+
         /// <summary>
         /// Populate a list of players.
         /// </summary>
@@ -122,13 +166,20 @@ namespace GameEngine
         {
             List<Player> players = new List<Player>();
 
-            var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Blue };
+            var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow};
+            var startingPositions = new List<Position>()
+            {
+                new Position(0, 6),
+                new Position(6, 10),
+                new Position(10, 4),
+                new Position(4, 0),
+            };
 
             for (int i = 0; i < NumberOfPlayers; i++)
             {
                 //TODO: Let players change color?
-                //TODO: Fix this, positions and stuff
-                players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i, new Position(5,0)));
+                //TODO: Fix so the positions are in the right spot even without 4 players
+                players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i, startingPositions[i]));
             }
 
             return players;
@@ -138,8 +189,31 @@ namespace GameEngine
         {
             var player = Players[playerId];
 
-            //TODO: Fix piece logic
-            GameBoard[player.StartPosition.Col, player.StartPosition.Row] = player.Pieces[0];
+            foreach (var piece in Players[playerId].Pieces)
+            {
+                if (!piece.IsPlacedOnBoard)
+                {
+                    //TODO: Make sure piece logic is correct
+                    GameBoard[player.StartPosition.Row, player.StartPosition.Col] = piece;
+                    piece.IsPlacedOnBoard = true;
+                    return;
+                }
+            }
+        }
+
+        private int PiecesOnBoard(int playerId)
+        {
+            var totalPieces = 0;
+
+            foreach (var piece in Players[playerId].Pieces)
+            {
+                if (piece.IsPlacedOnBoard)
+                {
+                    totalPieces++;
+                }
+            }
+
+            return totalPieces;
         }
 
         public Position FindObject(IBoardObject[,] board, IBoardObject obj)
@@ -176,7 +250,7 @@ namespace GameEngine
             int traversablePos = -1;
             for (int i = 0; i < Traversable.Count; i++)
             {
-                if (Traversable[i].Col == position.Col && Traversable[i].Row == position.Row)
+                if (Traversable[i].Row == position.Row && Traversable[i].Col == position.Col)
                 {
                     traversablePos = i;
                 }
@@ -190,18 +264,18 @@ namespace GameEngine
 
             for (int i = 0; i < diceRoll; i++)
             {
-                if (!TryMove(Traversable[traversablePos]))
+                if (!TryMove(Traversable[traversablePos + 1]))
                 {
                     //Move failed
                     return false;
                 }
 
                 //TODO: Check out of range
-                newPosition = Traversable[traversablePos + i];
+                newPosition = Traversable[traversablePos + i + 1];
             }
 
-            GameBoard[newPosition.Col, newPosition.Row] = piece;
-            GameBoard[position.Col, position.Row] = OriginalGameBoard[position.Col, position.Row];
+            GameBoard[newPosition.Row, newPosition.Col] = piece;
+            GameBoard[position.Row, position.Col] = OriginalGameBoard[position.Row, position.Col];
 
             return true;
         }
@@ -239,7 +313,8 @@ namespace GameEngine
                     }
                     else if (current.GetType() == typeof(GamePiece))
                     {
-                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.DarkYellow));
+                        ConsoleColor currentColor = Players[(current as GamePiece).PlayerId].Color;
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, currentColor));
                     }
                     else if (current.GetType() == typeof(EmptySpace))
                     {

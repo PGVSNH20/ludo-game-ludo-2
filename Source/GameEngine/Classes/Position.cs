@@ -8,17 +8,17 @@ namespace GameEngine.Classes
 {
     public struct Position
     {
-        public byte Col { get; set; }
         public byte Row { get; set; }
-        public Position(byte col, byte row)
+        public byte Col { get; set; }
+        public Position(byte row, byte col)
         {
-            this.Col = col;
             this.Row = row;
+            this.Col = col;
         }
-        public Position(int col, int row)
+        public Position(int row, int col)
         {
-            this.Col = (byte)col;
             this.Row = (byte)row;
+            this.Col = (byte)col;
         }
     }
 }

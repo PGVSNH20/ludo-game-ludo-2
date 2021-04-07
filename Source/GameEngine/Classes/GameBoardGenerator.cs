@@ -35,20 +35,20 @@ namespace GameEngine.Objects
             if (players.Count == 4)
             {
                 gameBoard[0, 6] = new Nest(0);
-                gameBoard[4, 0] = new Nest(1);
-                gameBoard[6, 10] = new Nest(2);
-                gameBoard[10, 4] = new Nest(3);
+                gameBoard[6, 10] = new Nest(1);
+                gameBoard[10, 4] = new Nest(2);
+                gameBoard[4, 0] = new Nest(3);
             }
             else if (players.Count == 3)
             {
                 gameBoard[0, 4] = new Nest(0);
-                gameBoard[6, 0] = new Nest(1);
-                gameBoard[10, 6] = new Nest(2);
+                gameBoard[6, 10] = new Nest(1);
+                gameBoard[10, 4] = new Nest(2);
             }
             else if (players.Count == 2)
             {
-                gameBoard[0, 4] = new Nest(0);
-                gameBoard[10, 6] = new Nest(1);
+                gameBoard[0, 6] = new Nest(0);
+                gameBoard[10, 4] = new Nest(1);
             }
             else
             {
@@ -74,7 +74,7 @@ namespace GameEngine.Objects
                 for (int row = 0; row < gameBoard.GetLength(0); row++)
                     for (int col = 0; col < gameBoard.GetLength(1); col++)
                         if (row == entryPoint.Position.Row && col == entryPoint.Position.Col)
-                            gameBoard[col, row] = new EmptySpace();
+                            gameBoard[row, col] = new EmptySpace();
 
             return gameBoard;
         }
@@ -84,7 +84,7 @@ namespace GameEngine.Objects
             // Red
             var changeColorBasedOnInterval = -1;
 
-             var paths = Player.GetAllInnerPaths();
+            var paths = Player.GetAllInnerPaths();
 
             for (int i = 0; i < Player.GetAllInnerPaths().Count; i++)
             {
