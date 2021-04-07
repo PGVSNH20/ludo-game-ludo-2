@@ -23,11 +23,14 @@ namespace GameEngine.Objects
     */
     public class Roadmap
     {
+        public List<Position> TravelPlan { get; set; }
 
-        Position startPosition1 = new Position(6, 0);
-        Position startPosition2 = new Position(0, 4);
-        Position startPosition3 = new Position(10, 6);
-        Position startPosition4 = new Position(4, 10);
+        public static Position StartPosition1 => new Position(6, 0);
+       public static Position StartPosition2 => new Position(0, 4);
+       public static Position StartPosition4 => new Position(4, 10);
+       public static Position StartPosition3 => new Position(10, 6);
+
+     
 
         Position endPosition1 = new Position(5, 0);
         Position endPosition2 = new Position(0, 5);
@@ -44,7 +47,7 @@ namespace GameEngine.Objects
                 new List<Position> // Red
                 {
                     endPosition1,
-                    startPosition1,
+                    StartPosition1,
                     new Position(6, 1),
                     new Position(6, 2),
                     new Position(6, 3),
@@ -58,7 +61,7 @@ namespace GameEngine.Objects
                 new List<Position> // Green
                 {
                     endPosition2,
-                    startPosition2,
+                    StartPosition2,
                     new Position(1, 4),
                     new Position(2, 4),
                     new Position(3, 4),
@@ -73,7 +76,7 @@ namespace GameEngine.Objects
                 new List<Position> // Yellow
                 {
                     endPosition3,
-                    startPosition3,
+                    StartPosition3,
                     new Position(9, 6),
                     new Position(7, 6),
                     new Position(6, 6),
@@ -88,7 +91,7 @@ namespace GameEngine.Objects
                 new List<Position> // Blue
                 {
                     endPosition4,
-                    startPosition4,
+                    StartPosition4,
                     new Position(4, 9),
                     new Position(4, 8),
                     new Position(4, 7),
@@ -151,49 +154,61 @@ namespace GameEngine.Objects
             return innerPathsToTravel;
         }
 
-        public List<List<Position>> GetRoadToTravelFromPlayerSpecification(Player player)
+        public List<Position> GetRoadToTravelFromPlayerSpecification(Player player)
         {
-            //Position startPosition1 = new Position(6, 0);
-            //Position startPosition2 = new Position(0, 4);
-            //Position startPosition3 = new Position(10, 6);
-            //Position startPosition4 = new Position(4, 10);
-            var travelPlan = new List<List<Position>>();
-
-            GetAllPathsToTraverse();
-
-            if (player.StartPosition.Row == startPosition1.Row && player.StartPosition.Col == startPosition1.Col)
+           
+            var travelPlan = new List<Position>();
+            Position ableToWalkInnerPath;
+          
+            if (player.StartPosition.Row == StartPosition1.Row && player.StartPosition.Col == StartPosition1.Col)
             {
-                travelPlan.Add(GetAllPathsToTraverse()[0]);
-                travelPlan.Add(GetAllPathsToTraverse()[1]);
-                travelPlan.Add(GetAllPathsToTraverse()[2]);
-                travelPlan.Add(GetAllPathsToTraverse()[3]);
-                travelPlan.Add(GetAllPathsToTraverse()[0]); // Innerpath
+                travelPlan.AddRange(GetAllPathsToTraverse()[0].Skip(1));
+                travelPlan.AddRange(GetAllPathsToTraverse()[1]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[2]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[3]);
 
-            }
-            else if (player.StartPosition.Row == startPosition2.Row && player.StartPosition.Col == startPosition2.Col)
-            {
-                travelPlan.Add(GetAllPathsToTraverse()[1]);
-                travelPlan.Add(GetAllPathsToTraverse()[2]);
-                travelPlan.Add(GetAllPathsToTraverse()[3]);
-                travelPlan.Add(GetAllPathsToTraverse()[0]);
-                travelPlan.Add(GetAllPathsToTraverse()[1]);
+                ableToWalkInnerPath = (GetAllPathsToTraverse()[0]).First();
+                travelPlan.Add(ableToWalkInnerPath);
+                // Innerpath
+                travelPlan.AddRange(GetAllInnerPaths()[0]);
 
             }
-            else if (player.StartPosition.Row == startPosition3.Row && player.StartPosition.Col == startPosition3.Col)
+            else if (player.StartPosition.Row == StartPosition2.Row && player.StartPosition.Col == StartPosition2.Col)
             {
-                travelPlan.Add(GetAllPathsToTraverse()[2]);
-                travelPlan.Add(GetAllPathsToTraverse()[3]);
-                travelPlan.Add(GetAllPathsToTraverse()[0]);
-                travelPlan.Add(GetAllPathsToTraverse()[1]);
-                travelPlan.Add(GetAllPathsToTraverse()[2]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[1].Skip(1));
+                travelPlan.AddRange(GetAllPathsToTraverse()[2]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[3]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[0]);
+
+                ableToWalkInnerPath = (GetAllPathsToTraverse()[1]).First();
+                travelPlan.Add(ableToWalkInnerPath);
+                // Innerpath
+                travelPlan.AddRange(GetAllInnerPaths()[1]);
+
             }
-            else if (player.StartPosition.Row == startPosition4.Row && player.StartPosition.Col == startPosition4.Col)
+            else if (player.StartPosition.Row == StartPosition3.Row && player.StartPosition.Col == StartPosition3.Col)
             {
-                travelPlan.Add(GetAllPathsToTraverse()[3]);
-                travelPlan.Add(GetAllPathsToTraverse()[0]);
-                travelPlan.Add(GetAllPathsToTraverse()[1]);
-                travelPlan.Add(GetAllPathsToTraverse()[2]);
-                travelPlan.Add(GetAllPathsToTraverse()[3]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[2].Skip(1));
+                travelPlan.AddRange(GetAllPathsToTraverse()[3]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[0]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[1]);
+
+                ableToWalkInnerPath = (GetAllPathsToTraverse()[2]).First();
+                travelPlan.Add(ableToWalkInnerPath);
+                // Innerpath
+                travelPlan.AddRange(GetAllInnerPaths()[2]);
+            }
+            else if (player.StartPosition.Row == StartPosition4.Row && player.StartPosition.Col == StartPosition4.Col)
+            {
+                travelPlan.AddRange(GetAllPathsToTraverse()[3].Skip(1));
+                travelPlan.AddRange(GetAllPathsToTraverse()[0]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[1]);
+                travelPlan.AddRange(GetAllPathsToTraverse()[2]);
+
+                ableToWalkInnerPath = (GetAllPathsToTraverse()[3]).First();
+                travelPlan.Add(ableToWalkInnerPath);
+                // Innerpath
+                travelPlan.AddRange(GetAllInnerPaths()[3]);
 
             }
             else throw new ArgumentException("No valid startpositon");
@@ -201,29 +216,7 @@ namespace GameEngine.Objects
             return travelPlan;
         }
 
-        public List<Position> GetAllStepsInTravelPath(List<List<Position>> positionsList)
-        {
-            List<Position> listOfTravelSteps = new List<Position>();
-            Position endPosition;
-
-            foreach (var listOfStep in positionsList)
-            {
-                endPosition = new Position(listOfStep[0].Col, listOfStep[0].Row);
-
-                for (int i = 0; i < listOfStep.Count; i++)
-                {
-                    if (listOfStep[i].Row  == endPosition.Row && listOfStep[i].Col == endPosition.Col) continue; 
-                    else listOfTravelSteps.Add(new Position(listOfStep[i].Col, listOfStep[i].Row));
-
-                }
-                   
-            }
-
-            return listOfTravelSteps;
-
-
-
-        }
+        
 
     }
 }

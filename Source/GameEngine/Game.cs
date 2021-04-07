@@ -75,17 +75,28 @@ namespace GameEngine
                             //TODO: Validate input with selectable pieces
                             inputLine = Console.ReadLine();
 
+                            StatusMessage = $"You chose piece {inputLine}!";
+
+
                             if (int.TryParse(inputLine, out int validInput) && validInput >= 1 && validInput <= 4) //TODO: list of valid pieces contains?
                             {
+                                ActionMessage = "Valid number.";
+                                var pieceInAction = Players[activePlayer].Pieces[validInput];
+
+                                Players[activePlayer].Pieces[validInput].Position = TryToGetMovePosition(pieceInAction, diceRoll, Players[activePlayer].StartPosition);
                                 break;
                             }
+                            else
+                                ActionMessage = "Not correct number fooool!!";
+
+                            Update();
                         }
 
-                        StatusMessage = $"You chose piece {inputLine}!";
-                        ActionMessage = "";
-                        Update();
-
                         //TODO: Movement stuff
+                       
+
+
+
                         //Check path if valid and stuff 
 
                         break;
@@ -110,11 +121,17 @@ namespace GameEngine
             List<Player> players = new List<Player>();
 
             var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Blue };
+            var startPositons = new List<Position>() { Roadmap.StartPosition1, Roadmap.StartPosition2, Roadmap.StartPosition3, Roadmap.StartPosition4 };
 
             for (int i = 0; i < NumberOfPlayers; i++)
             {
                 // TODO:Låta spelare välja färg??
                 players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i)); // Ändrar kanske här
+                players[i].StartPosition = startPositons[i];
+
+                foreach (var gamePiece in players[i].Pieces)
+                    gamePiece.Position = players[i].StartPosition;
+                
             }
 
             return players;
@@ -130,8 +147,35 @@ namespace GameEngine
             throw new NotImplementedException();
         }
 
-        public void MovePiece(GamePiece piece, int diceRoll)
+        public Position TryToGetMovePosition(GamePiece piece, int diceRoll, Position currentPostion)
         {
+
+            var roadMap = new Roadmap();
+            roadMap.TravelPlan = roadMap.GetRoadToTravelFromPlayerSpecification(Players[activePlayer]);
+
+            //var startFromPosition = roadMap.TravelPlan.Where(p => p.Row == currentPostion.Row && p.Col == currentPostion.Col).Select()).First();
+            var startFromPosition = roadMap.TravelPlan.FindIndex((p => p.Row == currentPostion.Row && p.Col == currentPostion.Col));
+
+            Position newPosition;
+
+            int move = diceRoll;
+
+            for (int i = startFromPosition; i < roadMap.TravelPlan.Count; i++)
+            {
+                --move;
+
+                // Göra en beräkning för att inte traversera över tillåtna värdet(alltså listans längd)
+                if (i == roadMap.TravelPlan.Count - 1)
+                {
+                    // Här är man klanske i mål
+                    return newPosition = roadMap.TravelPlan[i];
+                }
+                else if (move.Equals(0))
+                {
+                    return newPosition = roadMap.TravelPlan[i];
+                }
+            }
+
             throw new NotImplementedException();
         }
 

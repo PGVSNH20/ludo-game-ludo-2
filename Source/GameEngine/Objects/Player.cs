@@ -7,11 +7,11 @@ namespace GameEngine
     public class Player
     {
 
-        public Position StartPosition { get; }
+        public Position StartPosition { get; set; }
 
         private List<Position> innerPath;
 
-        public static List<GamePiece> Pieces;
+        public  List<GamePiece> Pieces;
        
         public ConsoleColor Color;
 

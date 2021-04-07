@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameEngine.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace GameEngine.Interfaces
     {
         static object[,]GameBoard { get; set; }
 
-        void MovePiece(GamePiece piece, int diceRoll);
+        Position TryToGetMovePosition(GamePiece piece, int diceRoll, Position position);
 
         bool TryMove(int posX, int posY);
 
