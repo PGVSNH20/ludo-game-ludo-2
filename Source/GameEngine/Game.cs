@@ -268,11 +268,14 @@ namespace GameEngine
             for (int i = 0; i < diceRoll; i++)
             {
                 //TODO: Inner path code
-                if (!TryMove(Traversable[traversablePos + 1]))
+                //TODO: Check out of range
+                var nextStep = Traversable[traversablePos + 1];
+                if (!TryMove(nextStep, piece.PlayerId)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
                 {
                     //Move failed
                     return false;
                 }
+                
                 //TODO: If final move is not valid, don't move at all
                 //TODO: Check out of range
                 newPosition = Traversable[traversablePos + i + 1];
@@ -285,10 +288,17 @@ namespace GameEngine
             return true;
         }
 
-        public bool TryMove(Position position)
+        public bool TryMove(Position position, int playerID)
         {
+            var row = position.Row;
+            var column = position.Col;
+            var boardObject = GameBoard[row, column];
             //TODO: Check if can move
-
+            if (boardObject.GetType() == typeof(Nest) && (boardObject as Nest).PlayerId == playerID)
+            {
+                return false;
+            }
+            
             return true;
         }
 

@@ -13,7 +13,7 @@ namespace GameEngine.Interfaces
 
         bool MovePiece(GamePiece piece, int diceRoll);
 
-        bool TryMove(Position position);
+        bool TryMove(Position position, int playerID);
 
         void Knuff(GamePiece piece);
 
