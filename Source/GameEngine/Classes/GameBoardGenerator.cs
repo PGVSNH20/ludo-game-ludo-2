@@ -24,7 +24,7 @@ namespace GameEngine.Objects
 
             gameBoard = PopulateWithNests(gameBoard, players); // Ytterligare en metod för population?
             gameBoard = PopulateWithEmptySpaces(gameBoard);
-            gameBoard = PopulateWithDoorWays(gameBoard, players);
+            //gameBoard = PopulateWithDoorWays(gameBoard, players);
             gameBoard = PopulateWithInnerPath(gameBoard, players);
             gameBoard = PopulateWithGoal(gameBoard);
 

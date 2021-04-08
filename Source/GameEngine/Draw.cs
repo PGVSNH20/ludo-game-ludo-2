@@ -14,6 +14,8 @@ namespace GameEngine
     public class Draw
     {
 
+        static ConsoleColor standard = ConsoleColor.Black;
+
         //What menu should be displayed
         //private static Scene CurrentScene { get; set; }
 
@@ -51,6 +53,7 @@ namespace GameEngine
                 case Scene.OptionsMenu:
                     DrawLogo();
                     DrawMenu(optionsStartNewGame, selected);
+                    Console.BackgroundColor = standard;
                     break;
 
                 case Scene.LoadGame:
@@ -64,7 +67,7 @@ namespace GameEngine
 
                 case Scene.Game:
                     DrawBoard();
-                    //DrawScoreBoard();
+                   
                     DrawGameStatus(game.StatusMessage);
                     DrawGameActionStatus(game.ActionMessage);
                     
@@ -95,6 +98,7 @@ namespace GameEngine
 
         private static void DrawBoard()
         {
+
             var drawableGameBoard = Game.GenerateDrawable();
 
             for (int i = 0; i < drawableGameBoard.Count; i++)
@@ -112,6 +116,7 @@ namespace GameEngine
                 
                 Console.ForegroundColor = previousColor;
             }
+            Console.WriteLine();
             Console.WriteLine();
         }
 
@@ -155,6 +160,9 @@ namespace GameEngine
                 
             }
 
+
+            Console.BackgroundColor = standard;
+            Console.ForegroundColor = ConsoleColor.White;
            
             
         }
