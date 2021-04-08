@@ -4,12 +4,16 @@ using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Classes;
 using GameEngine.Objects;
+
+
 
 namespace GameEngine
 {
     public class Draw
     {
+
         //What menu should be displayed
         //private static Scene CurrentScene { get; set; }
 
@@ -21,23 +25,41 @@ namespace GameEngine
             ExitMenu,
             Game,
             ResultScreen,
+            HighScore,
+            LoadGame,
 
         }
 
         //TODO: Where and how should input be handled? Should we have an input manager-class/thingy or something that calls Draw?
         //TODO: Bigger draws might need own class, mainly the game's draw.
-        public static void Update(Scene scene, Game game = null)
+        public static void Update(Scene scene, Game game = null, int selected = 0)
         {
+
+            var startMenu = Menu.StartMenu();
+            var optionsStartNewGame = Menu.OptionsStartNewGame();
+            var loadGame = Menu.LoadGame();
+            var highScore = Menu.HighScore();
+
             Console.Clear();
             switch (scene)
             {
                 case Scene.MainMenu:
                     DrawLogo();
-                    DrawMainMenu();
+                    DrawMenu(startMenu, selected);
                     break;
                 
                 case Scene.OptionsMenu:
-                    //Display options
+                    DrawLogo();
+                    DrawMenu(optionsStartNewGame, selected);
+                    break;
+
+                case Scene.LoadGame:
+                    DrawLogo();
+                    DrawMenu(loadGame, selected);
+                    break;
+
+                case Scene.HighScore:
+                    DrawMenu(highScore);
                     break;
 
                 case Scene.Game:
@@ -71,11 +93,6 @@ namespace GameEngine
             Console.WriteLine();
         }
 
-        private static void DrawMainMenu()
-        {
-            Console.WriteLine("Hello, this is main menu.");
-        }
-
         private static void DrawBoard()
         {
             var drawableGameBoard = Game.GenerateDrawable();
@@ -106,6 +123,40 @@ namespace GameEngine
         private static void DrawGameStatus(string message)
         {
             Console.WriteLine(message);
+        }
+
+
+        public static void DrawMenu(string[] menu, int selected = 0)
+        {
+            string currentOption;
+
+            for (int i = 0; i < menu.Length; i++)
+            {
+                currentOption = menu[i];
+                string prefix;
+
+                if (i == selected)
+                {
+                    prefix = "*";
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.Green;
+
+                }
+                
+                else
+                {
+                    prefix = "";
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+
+                
+                Console.WriteLine($"{prefix} << {currentOption} >>");
+                
+            }
+
+           
+            
         }
 
         #endregion

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading;
 using GameEngine;
+using GameEngine.Classes;
+using Ludo.Classes;
 
 namespace Ludo
 {
@@ -8,10 +10,12 @@ namespace Ludo
     {
         static void Main(string[] args)
         {
-            Draw.Update(Draw.Scene.MainMenu);
+            Menu mainMenu = new Menu();
+            
+            //Draw.Update(Draw.Scene.MainMenu);
 
-            Rules rules = new Rules();
-            Game game = new Game(rules);
+            //Rules rules = new Rules();
+            //Game game = new Game(rules);
 
             //Draw.Update(Draw.Scene.Game);
         }
