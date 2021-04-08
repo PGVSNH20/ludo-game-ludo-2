@@ -137,3 +137,17 @@ User stories
 - - Enhetstester!!
 - - Databas om tid finns
 - - Resultatbräde om tid finns
+
+2021-04-07
+
+---
+
+- Gjort idag
+- - Movement på plats
+- - Städat
+- - Meny på plats (Jens tår i ögat)
+- - 
+
+- Planering till 9/4
+- - Fixa validering till movement
+- - Result
