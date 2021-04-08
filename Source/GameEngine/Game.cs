@@ -257,11 +257,13 @@ namespace GameEngine
                 }
             }
 
-            if (traversablePos == -1)
+            if (traversablePos == -1) // Hur får den till -1 eller ska vi jämföra under minus
             {
                 //Couldn't find position
                 return false;
             }
+
+
 
             for (int i = 0; i < diceRoll; i++)
             {
@@ -308,6 +310,11 @@ namespace GameEngine
                     else if (current.GetType() == typeof(Path))
                     {
                         drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.Gray));
+                    }
+                    else if (current.GetType() == typeof(DoorwayToInnerPath))
+                    {
+                        //ConsoleColor currentColor = Players[(current as DoorwayToInnerPath).PlayerId].Color; // Sätt till konstig färg, så länge den tillhör playya
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.DarkGray));
                     }
                     else if (current.GetType() == typeof(InnerSteppingStone))
                     {

@@ -23,12 +23,15 @@ namespace GameEngine.Objects
 
             gameBoard = PopulateWithNests(gameBoard, players); // Ytterligare en metod för population?
             gameBoard = PopulateWithEmptySpaces(gameBoard);
+            gameBoard = PopulateWithDoorWays(gameBoard, players);
             gameBoard = PopulateWithInnerPath(gameBoard, players);
             gameBoard = PopulateWithGoal(gameBoard);
 
 
             return gameBoard;
         }
+
+ 
 
         public static IBoardObject[,] PopulateWithNests(IBoardObject[,] gameBoard, List<Player> players)
         {
@@ -78,7 +81,23 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
+        public static IBoardObject[,] PopulateWithDoorWays(IBoardObject[,] gameBoard, List<Player> players)
+        {
+            var changeColorBasedOnInterval = -1;
 
+            var doorway = Roadmap.Doorways;
+
+            for (int i = 0; i < Roadmap.Doorways.Count; i++)
+            {
+                if (i % 4 == 0)
+                {
+                    ++changeColorBasedOnInterval;
+                }
+                gameBoard[doorway[i].Row, doorway[i].Col] = new DoorwayToInnerPath(changeColorBasedOnInterval);
+            }
+
+            return gameBoard;
+        }
         public static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard, List<Player> players)
         {
             // Red
@@ -95,14 +114,6 @@ namespace GameEngine.Objects
                 gameBoard[paths[i].Row, paths[i].Col] = new InnerSteppingStone(changeColorBasedOnInterval);
             }
             
-
-            //for (int row = 0; row < gameBoard.GetLength(0); row++)
-            //    for (int col = 0; col < gameBoard.GetLength(1); col++)
-            //    {
-            //        if (Player.GetAllInnerPaths().Any(p => p.Col == col && p.Row == row))
-            //            gameBoard[col, row] = new InnerSteppingStone();
-
-            //    }
             return gameBoard;
         }
     }
