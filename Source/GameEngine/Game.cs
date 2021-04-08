@@ -63,9 +63,10 @@ namespace GameEngine
 
                         //MOVEMENT LOGIC
 
-                        //TODO: Player can put piece on board
+                        //TODO: Check for available pieces instead of what the rules says
                         if ((diceRoll == 1 || diceRoll == 6) && PiecesOnBoard(activePlayer) < Rules.PiecesPerPlayer)
                         {
+                            //TODO: Six rule
                             if (PiecesOnBoard(activePlayer) == 0)
                             {
                                 StatusMessage = $"You rolled {diceRoll} and placed a piece on the board!";
@@ -107,7 +108,6 @@ namespace GameEngine
                         }
                         else
                         {
-                            //TODO: Update code to the above which is newer)
                             if (PiecesOnBoard(activePlayer) == 0)
                             {
                                 StatusMessage = $"You rolled {diceRoll}!";
@@ -130,7 +130,7 @@ namespace GameEngine
                                     {
                                         //TODO: Validate the move
                                         MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
-
+                                        //TODO: if false continue;
                                         StatusMessage = $"You chose piece {tempInput}!";
                                         ActionMessage = "";
                                         Update();
@@ -166,7 +166,9 @@ namespace GameEngine
         {
             List<Player> players = new List<Player>();
 
+            //TODO: Place these variables somewhere better?
             var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow};
+            //TODO: If not 4 players, fix starting positions. Also make it so nests and these get their positions from the same place.
             var startingPositions = new List<Position>()
             {
                 new Position(0, 6),
@@ -178,7 +180,6 @@ namespace GameEngine
             for (int i = 0; i < NumberOfPlayers; i++)
             {
                 //TODO: Let players change color?
-                //TODO: Fix so the positions are in the right spot even without 4 players
                 players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i, startingPositions[i]));
             }
 
@@ -264,16 +265,18 @@ namespace GameEngine
 
             for (int i = 0; i < diceRoll; i++)
             {
+                //TODO: Inner path code
                 if (!TryMove(Traversable[traversablePos + 1]))
                 {
                     //Move failed
                     return false;
                 }
-
+                //TODO: If final move is not valid, don't move at all
                 //TODO: Check out of range
                 newPosition = Traversable[traversablePos + i + 1];
             }
 
+            //Place piece on new position and set the old position to the original value when we created the board
             GameBoard[newPosition.Row, newPosition.Col] = piece;
             GameBoard[position.Row, position.Col] = OriginalGameBoard[position.Row, position.Col];
 
@@ -330,8 +333,7 @@ namespace GameEngine
                     }
                 }
             }
-
-
+            
             return drawableChars;
         }
     }
