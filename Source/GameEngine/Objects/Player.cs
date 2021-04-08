@@ -1,6 +1,7 @@
 ﻿using GameEngine.Objects;
 using System;
 using System.Collections.Generic;
+using GameEngine.Classes;
 
 namespace GameEngine
 {
@@ -11,15 +12,15 @@ namespace GameEngine
 
         private List<Position> innerPath;
 
-        public static List<GamePiece> Pieces;
+        public List<GamePiece> Pieces;
        
         public ConsoleColor Color;
 
-        public Player(int numberOfPieces, ConsoleColor color, int playerId)
+        public Player(int numberOfPieces, ConsoleColor color, int playerId, Position startPosition)
         {
             Color = color;
             Pieces = new List<GamePiece>();
-
+            StartPosition = startPosition;
 
             for (int i = 0; i < numberOfPieces; i++)
             {
@@ -84,36 +85,33 @@ namespace GameEngine
 
             return new List<Position>
             {
-
-                    // Red
+                // Player 1
                 //new Position(5, 0),
-                new Position(5, 1),
-                new Position(5, 2),
-                new Position(5, 3),
-                new Position(5, 4),
-
-                // Blue
-                //new Position(0, 5),
                 new Position(1, 5),
                 new Position(2, 5),
                 new Position(3, 5),
                 new Position(4, 5),
 
-            
+                // Player 2
+                //new Position(5, 10),
+                new Position(5, 9),
+                new Position(5, 8),
+                new Position(5, 7),
+                new Position(5, 6),
 
-                // Green
+                // Player 3
                 //new Position(10, 5),
                 new Position(9, 5),
                 new Position(8, 5),
                 new Position(7, 5),
                 new Position(6, 5),
 
-                // Yellow
-                //new Position(5, 10),
-                new Position(5, 9),
-                new Position(5, 8),
-                new Position(5, 7),
-                new Position(5, 6)
+                // Player 4
+                //new Position(0, 5),
+                new Position(5, 1),
+                new Position(5, 2),
+                new Position(5, 3),
+                new Position(5, 4)
             };
 
         }

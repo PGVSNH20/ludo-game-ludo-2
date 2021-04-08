@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using GameEngine.Classes;
 using GameEngine.Interfaces;
 using GameEngine.Objects;
 
@@ -11,9 +13,13 @@ namespace GameEngine
     /// <summary>
     /// Overlying logic for how the game should run
     /// </summary>
-    public class Game : ILudoBoard
+    public class Game : ILudoBoard, IDrawable
     {
         public static IBoardObject[,] GameBoard { get; set; }
+        public static IBoardObject[,] OriginalGameBoard { get; set; }
+
+        public static List<Position> Traversable = TraversablePath.CreatePath();
+
         public static Rules Rules;
         private Dice dice = new Dice();
         public string StatusMessage { get; set; }
@@ -29,6 +35,7 @@ namespace GameEngine
             Rules = rules;
             Players = AddPlayers(rules.NumberOfPlayers);
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
+            OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
 
             //TODO: Dictionary for status messages?
 
@@ -43,12 +50,12 @@ namespace GameEngine
             {
                 ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice."; //Get player color in some way
                 Update();
-                ConsoleKeyInfo input = Console.ReadKey();
+                var input = GetInput();
 
                 //TODO: Validate input
-                switch (input.Key)
+                switch (input)
                 {
-                    case ConsoleKey.Spacebar:
+                    case ' ':
 
                         diceRoll = dice.Roll();
 
@@ -56,90 +63,125 @@ namespace GameEngine
 
                         //MOVEMENT LOGIC
 
-                        //TODO: Player can put piece on board
-                        if (diceRoll == 1 || diceRoll == 6)
+                        //TODO: Check for available pieces instead of what the rules says
+                        var luckyThrow = (diceRoll == 1 || diceRoll == 6);
+                        if (luckyThrow && GameBoardGenerator.PiecesOnBoard(activePlayer) < Rules.PiecesPerPlayer)
                         {
-                            //Put piece on board
-                            ActionMessage = $"fix";
-                            Update();
-                        }
-
-                        //TODO: If player has more than one piece on the board, let player choose piece
-                        StatusMessage = $"You rolled {diceRoll}!";
-                        ActionMessage = "Choose which piece to move...";
-                        Update();
-
-                        string inputLine;
-                        while (true)
-                        {
-                            //TODO: Validate input with selectable pieces
-                            inputLine = Console.ReadLine();
-
-                            if (int.TryParse(inputLine, out int validInput) && validInput >= 1 && validInput <= 4) //TODO: list of valid pieces contains?
+                            //TODO: Six rule
+                            if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0)
                             {
-                                break;
+                                StatusMessage = $"You rolled {diceRoll} and placed a piece on the board!";
+                                GameBoardGenerator.PlacePieceOnBoard(activePlayer);
+                            }
+                            else
+                            {
+                                StatusMessage = $"You rolled {diceRoll}! You can place a new piece on the board or move one.";
+                                ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
+
+                                while (true)
+                                {
+                                    Update();
+                                    char tempInput = GetInput();
+
+                                    if (tempInput == ' ')
+                                    {
+                                        GameBoardGenerator.PlacePieceOnBoard(activePlayer);
+                                        break;
+                                    }
+                                    //TODO: Validate that the piece is on the board and maybe make a function for this to avoid redundancy
+                                    else if (int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
+                                    {
+                                        //TODO: Validate the move
+                                        Movement.MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
+                                        break;
+                                    }
+
+                                    StatusMessage = $"That didn't seem right, try again.";
+                                    ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
+                                }
+                            }
+
+
+                            ////TODO: Put piece on board and fix with rules
+                            //PlacePieceOnBoard(activePlayer);
+                            //ActionMessage = $"fix";
+                            //Update();
+                        }
+                        else
+                        {
+                            if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0)
+                            {
+                                StatusMessage = $"You rolled {diceRoll}!";
+                                ActionMessage = "But you need 1 or 6 to put a piece on the board...";
+                                Update();
+                                Thread.Sleep(1500);
+                            }
+                            else
+                            {
+                                StatusMessage = $"You rolled {diceRoll}!";
+                                ActionMessage = "Choose which piece to move...";
+                                Update();
+                                while (true)
+                                {
+                                    //TODO: Validate input with selectable pieces
+                                    var tempInput = GetInput();
+
+                                    //TODO: Validate that the piece is on the board
+                                    if (int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
+                                    {
+                                        //TODO: Validate the move
+                                        Movement.MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
+                                        //TODO: if false continue;
+                                        StatusMessage = $"You chose piece {tempInput}!";
+                                        ActionMessage = "";
+                                        Update();
+                                        break;
+                                    }
+                                }
                             }
                         }
 
-                        StatusMessage = $"You chose piece {inputLine}!";
-                        ActionMessage = "";
-                        Update();
-
-                        //TODO: Movement stuff
-                        //Check path if valid and stuff 
-
                         break;
-
                 }
 
                 EndTurn();
             }
         }
 
-        private void Update() => Draw.Update(Draw.Scene.Game, this);
-
-        private void EndTurn() => activePlayer = activePlayer >= Rules.NumberOfPlayers - 1 ? 0 : activePlayer + 1;
+        public void Update() => Draw.Update(Draw.Scene.Game, this);
 
         /// <summary>
         /// Populate a list of players.
         /// </summary>
-        /// <param name="NumberOfPlayers">How many players there are</param>
+        /// <param name="numberOfPlayers">How many players there are</param>
         /// <returns>A list populated with players</returns>
-        private List<Player> AddPlayers(int NumberOfPlayers)
+        private List<Player> AddPlayers(int numberOfPlayers)
         {
             List<Player> players = new List<Player>();
 
-            var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Green, ConsoleColor.Yellow, ConsoleColor.Blue };
-
-            for (int i = 0; i < NumberOfPlayers; i++)
+            //TODO: Place these variables somewhere better?
+            var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow };
+            //TODO: If not 4 players, fix starting positions. Also make it so nests and these get their positions from the same place.
+            var startingPositions = new List<Position>()
             {
-                // TODO:Låta spelare välja färg??
-                players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i)); // Ändrar kanske här
+                new Position(0, 6),
+                new Position(6, 10),
+                new Position(10, 4),
+                new Position(4, 0),
+            };
+
+            for (int i = 0; i < numberOfPlayers; i++)
+            {
+                //TODO: Let players change color?
+                players.Add(new Player(Rules.PiecesPerPlayer, playerColors[i], i, startingPositions[i]));
             }
 
             return players;
         }
 
-        public void CheckGameState()
-        {
-            throw new NotImplementedException();
-        }
+        private void EndTurn() => activePlayer = activePlayer >= Rules.NumberOfPlayers - 1 ? 0 : activePlayer + 1;
 
-        public void Knuff(GamePiece piece)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void MovePiece(GamePiece piece, int diceRoll)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryMove(int posX, int posY)
-        {
-            throw new NotImplementedException();
-        }
-
+        private char GetInput() => Console.ReadKey().KeyChar;
 
         public static List<DrawableChar> GenerateDrawable()
         {
@@ -159,6 +201,11 @@ namespace GameEngine
                     {
                         drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.Gray));
                     }
+                    else if (current.GetType() == typeof(DoorwayToInnerPath))
+                    {
+                        //ConsoleColor currentColor = Players[(current as DoorwayToInnerPath).PlayerId].Color; // Sätt till konstig färg, så länge den tillhör playya
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.DarkGray));
+                    }
                     else if (current.GetType() == typeof(InnerSteppingStone))
                     {
                         ConsoleColor currentColor = Players[(current as InnerSteppingStone).PlayerId].Color;
@@ -166,7 +213,8 @@ namespace GameEngine
                     }
                     else if (current.GetType() == typeof(GamePiece))
                     {
-                        drawableChars.Add(new DrawableChar(current.CharToDraw, ConsoleColor.DarkYellow));
+                        ConsoleColor currentColor = Players[(current as GamePiece).PlayerId].Color;
+                        drawableChars.Add(new DrawableChar(current.CharToDraw, currentColor));
                     }
                     else if (current.GetType() == typeof(EmptySpace))
                     {
@@ -182,11 +230,8 @@ namespace GameEngine
                     }
                 }
             }
-
-
+            
             return drawableChars;
         }
     }
-
-
 }

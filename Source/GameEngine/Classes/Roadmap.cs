@@ -3,9 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Classes;
 
 namespace GameEngine.Objects
 {
+
+
     /*       outerBoard = new char[11, 11]
             {
                 {' ',' ',' ',' ','#','#','@',' ',' ',' ',' '},
@@ -23,6 +26,21 @@ namespace GameEngine.Objects
     */
     public class Roadmap
     {
+        static public List<Position> Doorways { get; set; } = new List<Position>
+        {
+             new Position(0,5),
+             new Position(5,0),
+             new Position(5,10),
+             new Position(10,5),
+        };
+
+
+        static public Position GateToInnerPath1 { get; set; } = new Position(0, 5);
+        static public Position GateToInnerPath2 { get; set; } = new Position(5, 0);
+        static public Position GateToInnerPath3 { get; set; } = new Position(5, 10);
+        static public Position GateToInnerPath4 { get; set; } = new Position(10, 5);
+
+
 
         Position startPosition1 = new Position(6, 0);
         Position startPosition2 = new Position(0, 4);
@@ -45,7 +63,6 @@ namespace GameEngine.Objects
                 {
                     endPosition1,
                     startPosition1,
-                    new Position(6, 1),
                     new Position(6, 2),
                     new Position(6, 3),
                     new Position(6, 4),
@@ -61,6 +78,7 @@ namespace GameEngine.Objects
                     startPosition2,
                     new Position(1, 4),
                     new Position(2, 4),
+                    new Position(6, 1),
                     new Position(3, 4),
                     new Position(4, 4),
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GameEngine.Objects
+namespace GameEngine.Classes
 {
     class Result
     {
@@ -16,7 +16,11 @@ namespace GameEngine.Objects
             Console.WriteLine("Team: [3] Home"); Console.WriteLine("Team: [1] Goal");
             Console.WriteLine("Team: [3] Home"); Console.WriteLine("Team: [1] Goal");
             return null;                                                  
-        }                                                                 
-        
+        }
+
+        public void CheckGameState()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

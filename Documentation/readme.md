@@ -120,3 +120,20 @@ User stories
 - - Strukturera upp databasen?
 - - Resultatbräde
 
+2021-04-07
+
+---
+
+- Gjort idag
+- - Belinda har fått tårta.
+- - Mattias skapar en fantastiskt användarvänlig meny.
+- - Skapat RoadMap inför navigering av GamePieces.
+- - Vi har samlat in alla Paths på vårt GameBoard i en lista som våra GamePieces ska kunna navigera på.
+- - Försöker ordna upp våra rader och kolumner i Position, skriver om listan?
+- - ListCeption är påbörjat!
+
+- Planering till 8/4
+- - Finslipa våra metoder som får GamePieces att flytta på sig.
+- - Enhetstester!!
+- - Databas om tid finns
+- - Resultatbräde om tid finns
