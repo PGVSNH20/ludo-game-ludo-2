@@ -31,6 +31,9 @@ namespace GameEngine.Classes
         public Menu()
         {
 
+            var mainMenu = StartMenu();
+            var optionsStartNewGame = OptionsStartNewGame();
+
             Update();
             while (true)
             {
@@ -50,9 +53,13 @@ namespace GameEngine.Classes
                 if (input.Key == ConsoleKey.DownArrow)
                 {
                     selectedOption++;
-                    if (selectedOption == 4)
+                    if(selectedOption == optionsStartNewGame.Length && current == Draw.Scene.OptionsMenu)
                     {
-                        selectedOption--;
+                        selectedOption = 0;
+                    }
+                    if (selectedOption == mainMenu.Length)
+                    {  
+                        selectedOption = 0;
                     }
                     Update();
                     
