@@ -67,7 +67,7 @@ namespace GameEngine
 
                 case Scene.Game:
                     DrawBoard();
-                   
+                    //TODO: Draw results
                     DrawGameStatus(game.StatusMessage);
                     DrawGameActionStatus(game.ActionMessage);
                     
