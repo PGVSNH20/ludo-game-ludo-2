@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using GameEngine.Classes;
 
 namespace GameEngine.Objects
 {
@@ -31,9 +32,7 @@ namespace GameEngine.Objects
             return gameBoard;
         }
 
- 
-
-        public static IBoardObject[,] PopulateWithNests(IBoardObject[,] gameBoard, List<Player> players)
+        private static IBoardObject[,] PopulateWithNests(IBoardObject[,] gameBoard, List<Player> players)
         {
             if (players.Count == 4)
             {
@@ -61,15 +60,13 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
-
-        public static IBoardObject[,] PopulateWithGoal(IBoardObject[,] gameBoard)
+        private static IBoardObject[,] PopulateWithGoal(IBoardObject[,] gameBoard)
         {
             gameBoard[5, 5] = new Goal();
 
             return gameBoard;
         }
-
-        public static IBoardObject[,] PopulateWithEmptySpaces(IBoardObject[,] gameBoard)
+        private static IBoardObject[,] PopulateWithEmptySpaces(IBoardObject[,] gameBoard)
         {
             var emptySpaces = new EmptySpace();
 
@@ -81,7 +78,7 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
-        public static IBoardObject[,] PopulateWithDoorWays(IBoardObject[,] gameBoard, List<Player> players)
+        private static IBoardObject[,] PopulateWithDoorWays(IBoardObject[,] gameBoard, List<Player> players)
         {
             var changeColorBasedOnInterval = -1;
 
@@ -98,7 +95,7 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
-        public static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard, List<Player> players)
+        private static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard, List<Player> players)
         {
             // Red
             var changeColorBasedOnInterval = -1;
@@ -115,6 +112,53 @@ namespace GameEngine.Objects
             }
             
             return gameBoard;
+        }
+
+        public static Position FindObject(IBoardObject[,] board, IBoardObject obj)
+        {
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i, j].Equals(obj))
+                    {
+                        return new Position(i, j);
+                    }
+                }
+            }
+
+            return new Position();
+        }
+
+        public static void PlacePieceOnBoard(int playerId)
+        {
+            var player = Game.Players[playerId];
+
+            foreach (var piece in Game.Players[playerId].Pieces)
+            {
+                if (!piece.IsPlacedOnBoard)
+                {
+                    //TODO: Make sure piece logic is correct
+                    Game.GameBoard[player.StartPosition.Row, player.StartPosition.Col] = piece;
+                    piece.IsPlacedOnBoard = true;
+                    return;
+                }
+            }
+        }
+
+        public static int PiecesOnBoard(int playerId)
+        {
+            var totalPieces = 0;
+
+            foreach (var piece in Game.Players[playerId].Pieces)
+            {
+                if (piece.IsPlacedOnBoard)
+                {
+                    totalPieces++;
+                }
+            }
+
+            return totalPieces;
         }
     }
 }

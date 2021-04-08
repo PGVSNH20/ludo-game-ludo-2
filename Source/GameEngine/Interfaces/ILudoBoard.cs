@@ -9,14 +9,10 @@ namespace GameEngine.Interfaces
 {
     public interface ILudoBoard
     {
-        static object[,]GameBoard { get; set; }
+        static object[,] GameBoard { get; set; }
 
-        bool MovePiece(GamePiece piece, int diceRoll);
+        static object[,] OriginalGameBoard { get; set; }
 
-        bool TryMove(Position position, int playerID);
-
-        void Knuff(GamePiece piece);
-
-        void CheckGameState();
+        static List<Player> Players { get; set; }
     }
 }

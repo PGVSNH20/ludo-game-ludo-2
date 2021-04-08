@@ -16,7 +16,11 @@ namespace GameEngine.Classes
             Console.WriteLine("Team: [3] Home"); Console.WriteLine("Team: [1] Goal");
             Console.WriteLine("Team: [3] Home"); Console.WriteLine("Team: [1] Goal");
             return null;                                                  
-        }                                                                 
-        
+        }
+
+        public void CheckGameState()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
