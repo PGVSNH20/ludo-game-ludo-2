@@ -138,7 +138,7 @@ User stories
 - - Databas om tid finns
 - - Resultatbräde om tid finns
 
-2021-04-07
+2021-04-08
 
 ---
 
@@ -151,3 +151,18 @@ User stories
 - Planering till 9/4
 - - Fixa validering till movement
 - - Result/tavla
+
+2021-04-09
+
+---
+
+- Gjort idag
+- - Movement logik.
+- - Movement logik..
+- - Movement logik...
+- - Validering till movement
+- - Snart kan våra gamepieces vandra in mot mål!
+
+- Planering till 11/4
+- - Skriva kommentarer och summaries
+- - Få klart programmet
