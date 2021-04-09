@@ -16,23 +16,20 @@ namespace GameEngine.Classes
             Position newPosition = new Position();
             
             int traversablePos = -1;
-
-            // Innerpath Jens påfund, kom ihåg lägga ytterligare en out
-            if (piece.OnInnerPath == true)
-                traversablePos = HeadingTowardsInnerPath(position, piece);
-
-            else // regular way
-            for (int i = 0; i < Game.Traversable.Count; i++)
+            List<Position> currentPath;
+            
+            if (piece.OnInnerPath)
             {
-                
-                if (Game.Traversable[i].Row == position.Row && Game.Traversable[i].Col == position.Col)
-                {
-                    traversablePos = i;
-                }
-
+                currentPath = Player.GetAllInnerPaths();
+            }
+            else // regular way
+            {
+                currentPath = Game.Traversable;
             }
 
-            if (traversablePos == -1) // Hur får den till -1 eller ska vi jämföra under minus
+            traversablePos = FindOnPath(currentPath, position, piece);
+
+            if (traversablePos == -1)
             {
                 //Couldn't find position
                 return false;
@@ -41,31 +38,28 @@ namespace GameEngine.Classes
             for (int i = 0; i < diceRoll; i++)
             {
                 //TODO: Inner path code
-                //TODO: Check out of range
                 int offset = 0;
                 var currentDicePostion = 1 + i;
 
-                if (traversablePos + currentDicePostion >= Game.Traversable.Count)
+                if (traversablePos + currentDicePostion >= currentPath.Count)
                 {
-                    offset = 0 - Game.Traversable.Count;
+                    offset = 0 - currentPath.Count;
                 }
 
-                var nextStep = Game.Traversable[traversablePos + currentDicePostion + offset];
+                var nextStep = currentPath[traversablePos + currentDicePostion + offset];
 
-                bool lastStep = i == diceRoll - 1;
+                bool finalStep = i == diceRoll - 1;
 
-                if (!Movement.TryMove(piece, nextStep, lastStep, out bool onInnerPath)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
+                if (!Movement.TryMove(piece, nextStep, finalStep, out bool onInnerPath)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
                 {
                     //Move failed
-
                     piece.OnInnerPath = onInnerPath;
 
                     return false;
                 }
 
                 //TODO: If final move is not valid, don't move at all
-                //TODO: Check out of range
-                newPosition = Game.Traversable[traversablePos + currentDicePostion + offset];
+                newPosition = currentPath[traversablePos + currentDicePostion + offset];
             }
 
             //Place piece on new position and set the old position to the original value when we created the board
@@ -74,17 +68,17 @@ namespace GameEngine.Classes
             return true;
         }
 
-        private static int HeadingTowardsInnerPath(Position pos, GamePiece piece)
+        private static int FindOnPath(List<Position> path, Position pos, GamePiece piece)
         {
-            var innerPaths = Player.GetAllInnerPaths();
-
-            for (int index = 0; index < innerPaths.Count; index++)
+            for (int i = 0; i < path.Count; i++)
             {
-                if (innerPaths[index].Row == pos.Row && innerPaths[index].Col == pos.Col)
-                    return index;
+                if (path[i].Row == pos.Row && path[i].Col == pos.Col)
+                {
+                    return i;
+                }
             }
-            return -1; 
 
+            return -1;
         }
 
         public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep, out bool onInnerPath) // Jens måste kanske ta bort out
