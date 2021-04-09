@@ -97,18 +97,20 @@ namespace GameEngine.Objects
         }
         private static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard, List<Player> players)
         {
-            // Red
             var changeColorBasedOnInterval = -1;
 
             var paths = Player.GetAllInnerPaths();
-
+            
             for (int i = 0; i < Player.GetAllInnerPaths().Count; i++)
             {
-                if (i % 4 == 0)
+                if(!paths[i].Equals(new Position(5, 5)))
                 {
-                    ++changeColorBasedOnInterval;
+                    if (i % (paths.Count / Game.Rules.NumberOfPlayers) == 0)
+                    {
+                        ++changeColorBasedOnInterval;
+                    }
+                    gameBoard[paths[i].Row, paths[i].Col] = new InnerSteppingStone(changeColorBasedOnInterval);
                 }
-                gameBoard[paths[i].Row, paths[i].Col] = new InnerSteppingStone(changeColorBasedOnInterval);
             }
             
             return gameBoard;

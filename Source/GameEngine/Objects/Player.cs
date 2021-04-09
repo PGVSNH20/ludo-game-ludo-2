@@ -91,6 +91,7 @@ namespace GameEngine
                 new Position(2, 5),
                 new Position(3, 5),
                 new Position(4, 5),
+                new Position(5, 5), //Goal
 
                 // Player 2
                 //new Position(5, 10),
@@ -98,6 +99,7 @@ namespace GameEngine
                 new Position(5, 8),
                 new Position(5, 7),
                 new Position(5, 6),
+                new Position(5, 5), //Goal
 
                 // Player 3
                 //new Position(10, 5),
@@ -105,13 +107,15 @@ namespace GameEngine
                 new Position(8, 5),
                 new Position(7, 5),
                 new Position(6, 5),
+                new Position(5, 5), //Goal
 
                 // Player 4
                 //new Position(0, 5),
                 new Position(5, 1),
                 new Position(5, 2),
                 new Position(5, 3),
-                new Position(5, 4)
+                new Position(5, 4),
+                new Position(5, 5) //Goal
             };
 
         }

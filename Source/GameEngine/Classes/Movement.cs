@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using GameEngine.Objects;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,9 @@ namespace GameEngine.Classes
             
             int traversablePos = -1;
             List<Position> currentPath;
-            
+
+            var onInnerPath = piece.OnInnerPath;
+
             if (piece.OnInnerPath)
             {
                 currentPath = Player.GetAllInnerPaths();
@@ -53,9 +56,22 @@ namespace GameEngine.Classes
                 if (!Movement.TryMove(piece, nextStep, finalStep)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
                 {
                     //Move failed
-                    
 
                     return false;
+                }
+
+                if (piece.OnInnerPath && !onInnerPath)
+                {
+                    currentPath = Player.GetAllInnerPaths();
+
+                    diceRoll -= currentDicePostion;
+                    currentDicePostion = 0;
+                    offset = 0;
+                    i = -1;
+
+                    traversablePos = (currentPath.Count / Game.Rules.NumberOfPlayers) * piece.PlayerId;
+
+                    onInnerPath = true;
                 }
 
                 //TODO: If final move is not valid, don't move at all
@@ -63,6 +79,7 @@ namespace GameEngine.Classes
             }
 
             //Place piece on new position and set the old position to the original value when we created the board
+
             Game.GameBoard[newPosition.Row, newPosition.Col] = piece;
             Game.GameBoard[position.Row, position.Col] = Game.OriginalGameBoard[position.Row, position.Col];
             return true;
@@ -81,7 +98,7 @@ namespace GameEngine.Classes
             return -1;
         }
 
-        public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep) // Jens måste kanske ta bort out// Mattias tog bort den istället.
+        public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep) // Jens måste kanske ta bort out. // Mattias tog bort den istället. //Fabian blev nöjd.
         {
             
 
@@ -91,14 +108,14 @@ namespace GameEngine.Classes
             var originalBoard = Game.OriginalGameBoard[row, column];
             var playerID = gamePiece.PlayerId;
 
+            //TODO: Messaging here to keep the players slightly less confused
             //If nest of the same color, move player to InnerPath towards the goal
             if (originalBoard.GetType() == typeof(Nest) && (originalBoard as Nest).PlayerId == playerID)
             {
-                
                 gamePiece.OnInnerPath = true;
                 
                 //TODO: Fix innerpath movement logic
-                return false;
+                return true;
             }
             //If piece of own color is found along the way, move is not valid
             else if (boardObject.GetType() == typeof(GamePiece) && (boardObject as GamePiece).PlayerId == playerID)
@@ -111,10 +128,18 @@ namespace GameEngine.Classes
                 Knuff(boardObject as GamePiece);
                 return true;
             }
-            else if (originalBoard.GetType() == typeof(Goal))
+            else if (originalBoard.GetType() == typeof(Goal) && isFinalStep)
             {
                 //TODO: Piece reached the goal logic
                 //TODO: Check gamestate and potentially finish the game
+                gamePiece.IsPlacedOnBoard = false;
+                //On inner path still?
+                return true;
+            }
+            else if (originalBoard.GetType() == typeof(Goal))
+            {
+                //Piece missed the goal
+                return false;
             }
 
             //TODO: Logic for what happens if a piece misses the goal, walks too far
