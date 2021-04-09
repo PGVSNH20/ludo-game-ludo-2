@@ -22,8 +22,8 @@ namespace GameEngine
 
         public static Rules Rules;
         private Dice dice = new Dice();
-        public string StatusMessage { get; set; }
-        public string ActionMessage { get; set; }
+        public static string StatusMessage { get; set; }
+        public static string ActionMessage { get; set; }
         public static List<Player> Players { get; set; }
 
         //Whose turn is it
@@ -40,15 +40,15 @@ namespace GameEngine
             //TODO: Dictionary for status messages?
 
             //Initial variables
-            StatusMessage = "";
-            ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice."; //Get player color in some way
+            SetStatusMessage($"Started game with {rules.NumberOfPlayers} players and {rules.PiecesPerPlayer} pieces each.");
+            SetActionMessage($"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice.");
             int diceRoll;
 
             ////////////////////Game loop
             bool running = true;
             while (running)
             {
-                ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice."; //Get player color in some way
+                ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice.";
                 Update();
                 var input = GetInput();
 
@@ -129,12 +129,13 @@ namespace GameEngine
                                     //TODO: Validate that the piece is on the board
                                     if (int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
                                     {
+                                        ActionMessage = "";
                                         //TODO: Validate the move
                                         Movement.MovePiece(Players[activePlayer].Pieces[validInput - 1], diceRoll);
                                         //TODO: if false continue;
                                         StatusMessage = $"You chose piece {tempInput}!";
-                                        ActionMessage = "";
                                         Update();
+                                        Thread.Sleep(500);
                                         break;
                                     }
                                 }
@@ -147,6 +148,10 @@ namespace GameEngine
                 EndTurn();
             }
         }
+
+        public static void SetActionMessage(string message) => ActionMessage = message;
+
+        public static void SetStatusMessage(string message) => StatusMessage = message;
 
         public void Update() => Draw.Update(Draw.Scene.Game, this);
 

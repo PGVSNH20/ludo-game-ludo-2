@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GameEngine.Objects;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameEngine.Classes
 {
@@ -33,8 +34,16 @@ namespace GameEngine.Classes
             {
                 //TODO: Inner path code
                 //TODO: Check out of range
-                var nextStep = Game.Traversable[traversablePos + 1];
-                if (!Movement.TryMove(nextStep, piece.PlayerId)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
+                int offset = 0;
+                if (traversablePos + 1 >= Game.Traversable.Count)
+                {
+                    offset = 0 - Game.Traversable.Count;
+                }
+
+                var nextStep = Game.Traversable[traversablePos + 1 + offset];
+
+                bool lastStep = i == diceRoll - 1;
+                if (!Movement.TryMove(nextStep, piece.PlayerId, lastStep)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
                 {
                     //Move failed
                     return false;
@@ -42,33 +51,53 @@ namespace GameEngine.Classes
 
                 //TODO: If final move is not valid, don't move at all
                 //TODO: Check out of range
-                newPosition = Game.Traversable[traversablePos + i + 1];
+                newPosition = Game.Traversable[traversablePos + i + 1 + offset];
             }
 
             //Place piece on new position and set the old position to the original value when we created the board
             Game.GameBoard[newPosition.Row, newPosition.Col] = piece;
             Game.GameBoard[position.Row, position.Col] = Game.OriginalGameBoard[position.Row, position.Col];
-
             return true;
         }
 
-        public static bool TryMove(Position position, int playerID)
+        public static bool TryMove(Position position, int playerID, bool isFinalStep)
         {
             var row = position.Row;
             var column = position.Col;
             var boardObject = Game.GameBoard[row, column];
-            //TODO: Check if can move
+            
+            //If nest of the same color, move player to InnerPath towards the goal
             if (boardObject.GetType() == typeof(Nest) && (boardObject as Nest).PlayerId == playerID)
+            {
+                //TODO: Fix innerpath movement logic
+                return false;
+            }
+            //If piece of own color is found along the way, move is not valid
+            else if (boardObject.GetType() == typeof(GamePiece) && (boardObject as GamePiece).PlayerId == playerID)
             {
                 return false;
             }
+            //If another player's piece and it's the last step, commence knuff
+            else if (boardObject.GetType() == typeof(GamePiece) && isFinalStep)
+            {
+                Knuff(boardObject as GamePiece);
+                return true;
+            }
+            else if (boardObject.GetType() == typeof(Goal))
+            {
+                //TODO: Piece reached the goal logic
+                //TODO: Check gamestate and potentially finish the game
+            }
+
+            //TODO: Logic for what happens if a piece misses the goal, walks too far
 
             return true;
         }
 
         public static void Knuff(GamePiece piece)
         {
-            throw new NotImplementedException();
+            piece.IsPlacedOnBoard = false;
+            Game.SetActionMessage($"Player {Game.Players[piece.PlayerId].Color.ToString()}'s piece was knuff'd! Oh no!");
         }
 
     }

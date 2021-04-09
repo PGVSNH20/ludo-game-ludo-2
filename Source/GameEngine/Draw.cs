@@ -68,8 +68,8 @@ namespace GameEngine
                 case Scene.Game:
                     DrawBoard();
                     //TODO: Draw results
-                    DrawGameStatus(game.StatusMessage);
-                    DrawGameActionStatus(game.ActionMessage);
+                    DrawGameStatus(Game.StatusMessage);
+                    DrawGameActionStatus(Game.ActionMessage);
                     
                     /*
                     INSERT BEAUTIFUL BOARD THAT JENS APPROVED THE COLORS OF

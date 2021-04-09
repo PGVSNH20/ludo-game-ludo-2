@@ -9,9 +9,5 @@ namespace GameEngine.Interfaces
 {
     interface IDrawable
     {
-        string StatusMessage { get; set; }
-        string ActionMessage { get; set; }
-
-        void Update();
     }
 }
