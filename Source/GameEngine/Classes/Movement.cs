@@ -20,9 +20,9 @@ namespace GameEngine.Classes
             // Innerpath Jens påfund, kom ihåg lägga ytterligare en out
             var innerPaths = Player.GetAllInnerPaths();
             if (piece.OnInnerPath == true)
-                for (int i = 0; i < innerPaths.Count; i++)
-                    if (innerPaths[i].Row == position.Row && innerPaths[i].Col == position.Col)
-                        traversablePos = i;
+                for (int index = 0; index < innerPaths.Count; index++)
+                    if (innerPaths[index].Row == position.Row && innerPaths[index].Col == position.Col)
+                        traversablePos = index;
 
             else // regular way
             for (int i = 0; i < Game.Traversable.Count; i++)
