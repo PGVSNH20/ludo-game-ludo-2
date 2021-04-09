@@ -50,10 +50,10 @@ namespace GameEngine.Classes
 
                 bool finalStep = i == diceRoll - 1;
 
-                if (!Movement.TryMove(piece, nextStep, finalStep, out bool onInnerPath)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
+                if (!Movement.TryMove(piece, nextStep, finalStep)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
                 {
                     //Move failed
-                    piece.OnInnerPath = onInnerPath;
+                    
 
                     return false;
                 }
@@ -81,9 +81,9 @@ namespace GameEngine.Classes
             return -1;
         }
 
-        public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep, out bool onInnerPath) // Jens måste kanske ta bort out
+        public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep) // Jens måste kanske ta bort out// Mattias tog bort den istället.
         {
-            onInnerPath = false;
+            
 
             var row = position.Row;
             var column = position.Col;
@@ -94,8 +94,8 @@ namespace GameEngine.Classes
             //If nest of the same color, move player to InnerPath towards the goal
             if (originalBoard.GetType() == typeof(Nest) && (originalBoard as Nest).PlayerId == playerID)
             {
-                onInnerPath = true;
-                gamePiece.OnInnerPath = onInnerPath;
+                
+                gamePiece.OnInnerPath = true;
                 
                 //TODO: Fix innerpath movement logic
                 return false;
