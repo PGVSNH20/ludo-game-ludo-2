@@ -132,7 +132,7 @@ namespace GameEngine
                                     var tempInput = GetInput();
 
                                     //TODO: Validate that the piece is on the board
-                                    if (ValidInputRange(tempInput, out validRange))
+                                    if (ValidInputRange(tempInput, out validRange) && IsGamePieceInGame(validRange, Players[activePlayer]))
                                     {
                                         ActionMessage = "";
                                         //TODO: Validate the move
@@ -260,6 +260,8 @@ namespace GameEngine
         }
         bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= 4;
 
+        bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece - 1].IsPlacedOnBoard == true;
+       
 
     }
 }

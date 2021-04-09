@@ -14,14 +14,25 @@ namespace GameEngine.Classes
         {
             Position position = GameBoardGenerator.FindObject(Game.GameBoard, piece);
             Position newPosition = new Position();
-
+            
             int traversablePos = -1;
+
+            // Innerpath Jens påfund, kom ihåg lägga ytterligare en out
+            var innerPaths = Player.GetAllInnerPaths();
+            if (piece.OnInnerPath == true)
+                for (int i = 0; i < innerPaths.Count; i++)
+                    if (innerPaths[i].Row == position.Row && innerPaths[i].Col == position.Col)
+                        traversablePos = i;
+
+            else // regular way
             for (int i = 0; i < Game.Traversable.Count; i++)
             {
+                
                 if (Game.Traversable[i].Row == position.Row && Game.Traversable[i].Col == position.Col)
                 {
                     traversablePos = i;
                 }
+
             }
 
             if (traversablePos == -1) // Hur får den till -1 eller ska vi jämföra under minus
@@ -35,23 +46,29 @@ namespace GameEngine.Classes
                 //TODO: Inner path code
                 //TODO: Check out of range
                 int offset = 0;
-                if (traversablePos + 1 >= Game.Traversable.Count)
+                var currentDicePostion = 1 + i;
+
+                if (traversablePos + currentDicePostion >= Game.Traversable.Count)
                 {
                     offset = 0 - Game.Traversable.Count;
                 }
 
-                var nextStep = Game.Traversable[traversablePos + 1 + offset];
+                var nextStep = Game.Traversable[traversablePos + currentDicePostion + offset];
 
                 bool lastStep = i == diceRoll - 1;
-                if (!Movement.TryMove(nextStep, piece.PlayerId, lastStep)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
+
+                if (!Movement.TryMove(piece, nextStep, lastStep, out bool onInnerPath)) // Om TryMove returnerar false misslyckas move, GamePiece kan inte flyttas
                 {
                     //Move failed
+
+                    piece.OnInnerPath = onInnerPath;
+
                     return false;
                 }
 
                 //TODO: If final move is not valid, don't move at all
                 //TODO: Check out of range
-                newPosition = Game.Traversable[traversablePos + i + 1 + offset];
+                newPosition = Game.Traversable[traversablePos + currentDicePostion + offset];
             }
 
             //Place piece on new position and set the old position to the original value when we created the board
@@ -60,16 +77,22 @@ namespace GameEngine.Classes
             return true;
         }
 
-        public static bool TryMove(Position position, int playerID, bool isFinalStep)
+        public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep, out bool onInnerPath) // Jens måste kanske ta bort out
         {
+            onInnerPath = false;
+
             var row = position.Row;
             var column = position.Col;
             var boardObject = Game.GameBoard[row, column];
             var originalBoard = Game.OriginalGameBoard[row, column];
+            var playerID = gamePiece.PlayerId;
 
             //If nest of the same color, move player to InnerPath towards the goal
             if (originalBoard.GetType() == typeof(Nest) && (originalBoard as Nest).PlayerId == playerID)
             {
+                onInnerPath = true;
+                gamePiece.OnInnerPath = onInnerPath;
+                
                 //TODO: Fix innerpath movement logic
                 return false;
             }
