@@ -18,11 +18,8 @@ namespace GameEngine.Classes
             int traversablePos = -1;
 
             // Innerpath Jens påfund, kom ihåg lägga ytterligare en out
-            var innerPaths = Player.GetAllInnerPaths();
             if (piece.OnInnerPath == true)
-                for (int index = 0; index < innerPaths.Count; index++)
-                    if (innerPaths[index].Row == position.Row && innerPaths[index].Col == position.Col)
-                        traversablePos = index;
+                traversablePos = HeadingTowardsInnerPath(position, piece);
 
             else // regular way
             for (int i = 0; i < Game.Traversable.Count; i++)
@@ -75,6 +72,19 @@ namespace GameEngine.Classes
             Game.GameBoard[newPosition.Row, newPosition.Col] = piece;
             Game.GameBoard[position.Row, position.Col] = Game.OriginalGameBoard[position.Row, position.Col];
             return true;
+        }
+
+        private static int HeadingTowardsInnerPath(Position pos, GamePiece piece)
+        {
+            var innerPaths = Player.GetAllInnerPaths();
+
+            for (int index = 0; index < innerPaths.Count; index++)
+            {
+                if (innerPaths[index].Row == pos.Row && innerPaths[index].Col == pos.Col)
+                    return index;
+            }
+            return -1; 
+
         }
 
         public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep, out bool onInnerPath) // Jens måste kanske ta bort out
