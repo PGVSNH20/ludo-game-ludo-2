@@ -161,7 +161,7 @@ User stories
 - - Movement logik..
 - - Movement logik...
 - - Validering till movement
-- - Snart kan våra gamepieces vandra in mot mål!
+- - Våra GamePieces kan nu vandra in mot mål!
 
 - Planering till 11/4
 - - Skriva kommentarer och summaries
