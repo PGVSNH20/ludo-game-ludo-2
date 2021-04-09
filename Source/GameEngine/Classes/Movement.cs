@@ -65,9 +65,10 @@ namespace GameEngine.Classes
             var row = position.Row;
             var column = position.Col;
             var boardObject = Game.GameBoard[row, column];
-            
+            var originalBoard = Game.OriginalGameBoard[row, column];
+
             //If nest of the same color, move player to InnerPath towards the goal
-            if (boardObject.GetType() == typeof(Nest) && (boardObject as Nest).PlayerId == playerID)
+            if (originalBoard.GetType() == typeof(Nest) && (originalBoard as Nest).PlayerId == playerID)
             {
                 //TODO: Fix innerpath movement logic
                 return false;
@@ -83,7 +84,7 @@ namespace GameEngine.Classes
                 Knuff(boardObject as GamePiece);
                 return true;
             }
-            else if (boardObject.GetType() == typeof(Goal))
+            else if (originalBoard.GetType() == typeof(Goal))
             {
                 //TODO: Piece reached the goal logic
                 //TODO: Check gamestate and potentially finish the game

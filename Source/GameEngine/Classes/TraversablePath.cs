@@ -25,6 +25,7 @@ namespace GameEngine.Classes
 
             var path = new List<Position>()
             {
+
                 Nest1, //Top right starting position
                 new Position(1, 6),
                 new Position(2, 6),
