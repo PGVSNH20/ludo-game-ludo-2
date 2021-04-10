@@ -9,5 +9,6 @@ namespace GameEngine.Interfaces
     public interface IBoardObject
     {
         public char CharToDraw { get;}
+        //IBoardObject PopulateWithNests(IBoardObject[,] gameBoard, List<Player> players);
     }
 }

@@ -20,5 +20,8 @@ namespace GameEngine.Classes
             this.Row = (byte)row;
             this.Col = (byte)col;
         }
+
+        public override string ToString() => $"({Row},{Col})";
+      
     }
 }

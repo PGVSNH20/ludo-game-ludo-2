@@ -10,8 +10,6 @@ namespace GameEngine
 
         public Position StartPosition { get; }
 
-        private List<Position> innerPath;
-
         public List<GamePiece> Pieces;
        
         public ConsoleColor Color;

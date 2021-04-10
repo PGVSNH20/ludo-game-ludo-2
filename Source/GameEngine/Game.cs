@@ -26,6 +26,8 @@ namespace GameEngine
         public static string ActionMessage { get; set; }
         public static List<Player> Players { get; set; }
 
+        public static List<Result> PositionsInGame { get; set; } = new List<Result>();
+
         //Whose turn is it
         private int activePlayer = 0;
 
@@ -37,18 +39,22 @@ namespace GameEngine
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
             OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
 
+            Player player = Players[activePlayer]; // Time to shorten this variable?
+            GamePiece activePiece = player.Pieces.Where(gp => gp.IsPlacedOnBoard == true).FirstOrDefault();
+           
+
             //TODO: Dictionary for status messages?
 
             //Initial variables
             SetStatusMessage($"Started game with {rules.NumberOfPlayers} players and {rules.PiecesPerPlayer} pieces each.");
-            SetActionMessage($"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice.");
+            SetActionMessage($"It's player {Players[activePlayer].Color}'s turn. Roll the dice.");
             int diceRoll;
 
             ////////////////////Game loop
             bool running = true;
             while (running)
             {
-                ActionMessage = $"It's player {Players[activePlayer].Color.ToString()}'s turn. Roll the dice.";
+                ActionMessage = $"It's player {Players[activePlayer].Color}'s turn. Roll the dice.";
                 Update();
                 var input = GetInput();
 
@@ -78,11 +84,11 @@ namespace GameEngine
                             {
                                 StatusMessage = $"You rolled {diceRoll}! You can place a new piece on the board or move one.";
                                 ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
+                                Update();
 
-                                 do
+                                do
                                 {
-                                
-                                   Update();
+
                                    char tempInput = GetInput();
 
                                    if (tempInput == ' ')
@@ -93,8 +99,9 @@ namespace GameEngine
                                    //TODO: Validate that the piece is on the board and maybe make a function for this to avoid redundancy
                                    else if (ValidInputRange(tempInput, out validRange))
                                    {
-                                       //TODO: Validate the move
-                                       Movement.MovePiece(Players[activePlayer].Pieces[validRange - 1], diceRoll);
+                                        //TODO: Validate the move
+                                        activePiece = Players[activePlayer].Pieces[validRange];
+                                       Movement.MovePiece(activePiece, diceRoll);
                                        break;
                                    }
 
@@ -104,7 +111,6 @@ namespace GameEngine
 
                                 } while (ValidAmountOFGamePieces(validRange) == false);
                             }
-
 
                             ////TODO: Put piece on board and fix with rules
                             //PlacePieceOnBoard(activePlayer);
@@ -126,33 +132,48 @@ namespace GameEngine
                                 ActionMessage = "Choose which piece to move...";
                                 Update();
 
-                               
-                                do
-                                {    //TODO: Validate input with selectable pieces
-                                    var tempInput = GetInput();
-
-                                    //TODO: Validate that the piece is on the board
-                                    if (ValidInputRange(tempInput, out validRange) && IsGamePieceInGame(validRange, Players[activePlayer]))
-                                    {
-                                        ActionMessage = "";
-                                        //TODO: Validate the move
-                                        Movement.MovePiece(Players[activePlayer].Pieces[validRange - 1], diceRoll);
-                                        //TODO: if false continue;
-                                        StatusMessage = $"You chose piece {tempInput}!";
-                                        Update();
-                                        Thread.Sleep(500);
-                                        break;
-                                    }
-
-                                } while (ValidAmountOFGamePieces(validRange) == false);
+                                if (TryMoveByValidInputRange(diceRoll, out activePiece))
+                                {
+                                    Update();
+                                    Thread.Sleep(500);
+                                    break;
+                                }
+                                   
                             }
                         }
 
                         break;
                 }
-
+                UpdateGameInfoToDB(activePiece);
                 EndTurn();
             }
+        }
+
+        public bool TryMoveByValidInputRange(int diceRoll, out GamePiece activePiece) // out Message message
+        {
+            int validRange;
+
+            activePiece = null;
+
+            do
+            {    //TODO: Validate input with selectable pieces
+                var tempInput = GetInput();
+
+                //TODO: Validate that the piece is on the board
+                if (ValidInputRange(tempInput, out validRange) && IsGamePieceInGame(validRange, Players[activePlayer]))
+                {
+                    //ActionMessage = "";
+                    //TODO: Validate the move
+                    activePiece = Players[activePlayer].Pieces[validRange];
+                    Movement.MovePiece(activePiece, diceRoll);
+                    //TODO: if false continue;
+
+                    StatusMessage = $"You chose piece {tempInput}!";
+                    return true;
+                }
+
+            } while (ValidAmountOFGamePieces(validRange) == false);
+            return false;
         }
 
         public static void SetActionMessage(string message) => ActionMessage = message;
@@ -244,24 +265,30 @@ namespace GameEngine
             
             return drawableChars;
         }
-        bool ValidInputRange(char tempInput, out int validInputToOut)
+        bool ValidInputRange(char tempInput, out int outputRange)
         {
             //validInput = int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
 
-            validInputToOut = -1;
+            outputRange = -1;
 
             if (int.TryParse(tempInput.ToString(), out int validInput) && ValidAmountOFGamePieces(validInput))
             {
-                validInputToOut = validInput;
+                outputRange = validInput - 1;
                 return true;
             }
             else return false;
 
         }
-        bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= 4;
+        bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
 
         bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece - 1].IsPlacedOnBoard == true;
        
+        public void UpdateGameInfoToDB(GamePiece piece)
+        {
+            Position position = GameBoardGenerator.FindObject(Game.GameBoard, piece);
 
+            
+
+        }
     }
 }

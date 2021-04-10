@@ -148,19 +148,19 @@ namespace GameEngine.Objects
             }
         }
 
-        public static int PiecesOnBoard(int playerId)
-        {
-            var totalPieces = 0;
+        public static int PiecesOnBoard(int playerId) => Game.Players[playerId].Pieces.Where(x => x.IsPlacedOnBoard == true).Count();
+        //{
+        //    var totalPieces = Game.Players[playerId].Pieces.Where(x => x.IsPlacedOnBoard == true).Count();
 
-            foreach (var piece in Game.Players[playerId].Pieces)
-            {
-                if (piece.IsPlacedOnBoard)
-                {
-                    totalPieces++;
-                }
-            }
+        //    foreach (var piece in Game.Players[playerId].Pieces)
+        //    {
+        //        if (piece.IsPlacedOnBoard)
+        //        {
+        //            totalPieces++;
+        //        }
+        //    }
 
-            return totalPieces;
-        }
+        //    return totalPieces;
+        //}
     }
 }

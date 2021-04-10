@@ -19,7 +19,7 @@ namespace LudoTest
 
             //Arrange:
             //Action: 
-            Game game = new Game(new Rules());
+            //Game game = new Game(new Rules());
 
             //Expect: 
 
