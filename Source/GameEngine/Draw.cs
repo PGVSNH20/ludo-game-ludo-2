@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using GameEngine.Classes;
@@ -49,7 +50,7 @@ namespace GameEngine
                     DrawLogo();
                     DrawMenu(startMenu, selected);
                     break;
-                
+
                 case Scene.OptionsMenu:
                     DrawLogo();
                     DrawMenu(optionsStartNewGame, selected);
@@ -70,7 +71,7 @@ namespace GameEngine
                     //TODO: Draw results
                     DrawGameStatus(Game.StatusMessage);
                     DrawGameActionStatus(Game.ActionMessage);
-                    
+
                     /*
                     INSERT BEAUTIFUL BOARD THAT JENS APPROVED THE COLORS OF
 
@@ -85,7 +86,7 @@ namespace GameEngine
         }
 
         #region DrawComponents
-        
+
         private static void DrawLogo()
         {
             Console.WriteLine("   __           _");
@@ -110,10 +111,10 @@ namespace GameEngine
                 {
                     Console.WriteLine();
                 }
-                
+
                 Console.ForegroundColor = drawableGameBoard[i].Color;
                 Console.Write(drawableGameBoard[i].Character);
-                
+
                 Console.ForegroundColor = previousColor;
             }
             Console.WriteLine();
@@ -122,14 +123,13 @@ namespace GameEngine
 
         private static void DrawGameActionStatus(string message)
         {
-            Console.WriteLine(message);
+            ColorFormattedWriteLine(message);
         }
 
         private static void DrawGameStatus(string message)
         {
-            Console.WriteLine(message);
+            ColorFormattedWriteLine(message);
         }
-
 
         public static void DrawMenu(string[] menu, int selected = 0)
         {
@@ -147,7 +147,7 @@ namespace GameEngine
                     Console.BackgroundColor = ConsoleColor.Green;
 
                 }
-                
+
                 else
                 {
                     prefix = "";
@@ -155,18 +155,71 @@ namespace GameEngine
                     Console.BackgroundColor = ConsoleColor.Black;
                 }
 
-                
+
                 Console.WriteLine($"{prefix} << {currentOption} >>");
-                
+
             }
 
 
             Console.BackgroundColor = standard;
             Console.ForegroundColor = ConsoleColor.White;
-           
-            
+
+
         }
 
         #endregion
+
+        /// <summary>
+        /// Adds color to words that match ConsoleColor and prints them.
+        /// </summary>
+        /// <param name="text">String to be colorized</param>
+        private static void ColorFormattedWriteLine(string text)
+        {
+            var originalColor = Console.ForegroundColor;
+            var colors = ConsoleColor.GetValues(typeof(ConsoleColor));
+
+            var foundColor = false;
+            foreach (ConsoleColor consoleColor in colors)
+            {
+                if (text.Contains(consoleColor.ToString()))
+                {
+                    var splitText = text.Split(new string[] { consoleColor.ToString() }, StringSplitOptions.None);
+                    var splitList = new List<string>();
+                    for (var i = 0; i < splitText.Length; i++)
+                    {
+                        var span = splitText[i];
+                        splitList.Add(span);
+                        if (i < splitText.Length - 1)
+                        {
+                            splitList.Add(consoleColor.ToString());
+                        }
+                    }
+
+                    for (int i = 0; i < splitList.Count; i++)
+                    {
+                        if (i % 2 == 1)
+                        {
+                            Console.ForegroundColor = consoleColor;
+                            Console.Write(splitList[i]);
+                            Console.ForegroundColor = originalColor;
+                        }
+                        else
+                        {
+                            Console.Write(splitList[i]);
+                        }
+                    }
+                    Console.WriteLine();
+                    foundColor = true;
+                }
+            }
+
+            if (!foundColor)
+            {
+                Console.WriteLine(text);
+            }
+        }
+
+
+
     }
 }
