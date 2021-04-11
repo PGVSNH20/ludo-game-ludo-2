@@ -133,6 +133,8 @@ namespace GameEngine.Classes
                 //TODO: Piece reached the goal logic
                 //TODO: Check gamestate and potentially finish the game
                 gamePiece.IsPlacedOnBoard = false;
+                /*gamePiece.OnInnerPath = false;*/ // Comment out?
+                gamePiece.HasFinished = true;
                 //On inner path still?
                 return true;
             }

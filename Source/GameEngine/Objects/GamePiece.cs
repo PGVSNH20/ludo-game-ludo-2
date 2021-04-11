@@ -15,7 +15,10 @@ namespace GameEngine
         public int PlayerId { get; set; }
 
         public bool IsPlacedOnBoard { get; set; } = false;
+
         public bool OnInnerPath { get; set; } = false;
+
+        public bool HasFinished { get; set; } = false;
 
         public Position Position { get; set; }
 

@@ -18,8 +18,12 @@ namespace GameEngine.Classes
 
         public DateTime Date { get; set; } = new DateTime();
 
-                    //Player1                Player2                Player3                 Player4             Date
+        //Id           //Player1                Player2                Player3                 Player4             Date
         //Positions //(3,4)()(5,5)(2,1)     (3,4)()(5,5)(2,1)       (3,4)()(5,5)(2,1)       (3,4)()(5,5)(2,1)   2021/01/01
+        //GamePiece1 (3,4)
+        //GamePiece2 (3,4)
+        //GamePiece3 (3,4)
+        //GamePiece4 (3,4)
 
         public override string ToString()
         {

@@ -47,14 +47,14 @@ namespace GameEngine
 
             //Initial variables
             SetStatusMessage($"Started game with {rules.NumberOfPlayers} players and {rules.PiecesPerPlayer} pieces each.");
-            SetActionMessage($"It's player {Players[activePlayer].Color}'s turn. Roll the dice.");
+            SetActionMessage($"It's player {player.Color}'s turn. Roll the dice.");
             int diceRoll;
 
             ////////////////////Game loop
             bool running = true;
             while (running)
             {
-                ActionMessage = $"It's player {Players[activePlayer].Color}'s turn. Roll the dice.";
+                ActionMessage = $"It's player {player.Color}'s turn. Roll the dice.";
                 Update();
                 var input = GetInput();
 
@@ -75,7 +75,7 @@ namespace GameEngine
                         if (luckyThrow && GameBoardGenerator.PiecesOnBoard(activePlayer) < Rules.PiecesPerPlayer)
                         {
                             //TODO: Six rule
-                            if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0)
+                            if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0) 
                             {
                                 StatusMessage = $"You rolled {diceRoll} and placed a piece on the board!";
                                 GameBoardGenerator.PlacePieceOnBoard(activePlayer);
@@ -100,7 +100,7 @@ namespace GameEngine
                                    else if (ValidInputRange(tempInput, out validRange))
                                    {
                                         //TODO: Validate the move
-                                        activePiece = Players[activePlayer].Pieces[validRange];
+                                        activePiece = player.Pieces[validRange];
                                        Movement.MovePiece(activePiece, diceRoll);
                                        break;
                                    }
@@ -143,6 +143,14 @@ namespace GameEngine
                         }
 
                         break;
+                }
+
+                if (GameBoardGenerator.PiecesInGoal(activePlayer) == Rules.PiecesPerPlayer)
+                {
+                    StatusMessage = $"All {player.Color} game pieces has reached the goal.!";
+                    ActionMessage = "Yeaaaah! You won the game!.";
+                    running = false;
+                    Draw.Update(Draw.Scene.MainMenu);
                 }
                 UpdateGameInfoToDB(activePiece);
                 EndTurn();
@@ -282,12 +290,12 @@ namespace GameEngine
         bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
 
         bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece - 1].IsPlacedOnBoard == true;
-       
+        
+        bool PiecesInGoal(int selectedPiece, Player player) => player.Pieces[selectedPiece - 1].HasFinished == true;
+
         public void UpdateGameInfoToDB(GamePiece piece)
         {
-            Position position = GameBoardGenerator.FindObject(Game.GameBoard, piece);
-
-            
+            Position position = GameBoardGenerator.FindObject(Game.GameBoard, piece);      
 
         }
     }
