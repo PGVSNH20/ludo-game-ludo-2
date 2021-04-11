@@ -135,17 +135,20 @@ namespace GameEngine.Objects
         public static void PlacePieceOnBoard(int playerId)
         {
             var player = Game.Players[playerId];
+            var entryPosition = Game.GameBoard[player.StartPosition.Row, player.StartPosition.Col];
 
             foreach (var piece in Game.Players[playerId].Pieces)
             {
                 if (!piece.IsPlacedOnBoard && !piece.HasFinished)
                 {
                     //TODO: Make sure piece logic is correct
-                    Game.GameBoard[player.StartPosition.Row, player.StartPosition.Col] = piece;
-                    piece.IsPlacedOnBoard = true;
-                    return;
+                    if (Movement.TryMove(piece, player.StartPosition, true))
+                    {
+                        Game.GameBoard[player.StartPosition.Row, player.StartPosition.Col] = piece;
+                        piece.IsPlacedOnBoard = true;
+                        return;
+                    }  
                 }
-
             }
         }
         public static int PiecesInGoal(int playerId) => Game.Players[playerId].Pieces.Where(x => x.HasFinished == true).Count();

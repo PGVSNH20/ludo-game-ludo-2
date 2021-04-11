@@ -39,22 +39,21 @@ namespace GameEngine
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
             OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
 
-            Player player = Players[activePlayer]; // Time to shorten this variable?
-            GamePiece activePiece = player.Pieces.Where(gp => gp.IsPlacedOnBoard == true).FirstOrDefault();
+            GamePiece activePiece = Players[activePlayer].Pieces.Where(gp => gp.IsPlacedOnBoard == true).FirstOrDefault();
            
 
             //TODO: Dictionary for status messages?
 
             //Initial variables
             SetStatusMessage($"Started game with {rules.NumberOfPlayers} players and {rules.PiecesPerPlayer} pieces each.");
-            SetActionMessage($"It's player {player.Color}'s turn. Roll the dice.");
+            SetActionMessage($"It's player {Players[activePlayer].Color}'s turn. Roll the dice.");
             int diceRoll;
 
             ////////////////////Game loop
             bool running = true;
             while (running)
             {
-                ActionMessage = $"It's player {player.Color}'s turn. Roll the dice.";
+                ActionMessage = $"It's player {Players[activePlayer].Color}'s turn. Roll the dice.";
                 Update();
                 var input = GetInput();
 
@@ -100,9 +99,11 @@ namespace GameEngine
                                    else if (ValidInputRange(tempInput, out validRange))
                                    {
                                         //TODO: Validate the move
-                                        activePiece = player.Pieces[validRange];
-                                       Movement.MovePiece(activePiece, diceRoll);
-                                       break;
+                                        activePiece = Players[activePlayer].Pieces[validRange];
+                                        Movement.MovePiece(activePiece, diceRoll);
+                                        Update();
+                                        Thread.Sleep(1500);
+                                        break;
                                    }
 
                                    StatusMessage = $"That didn't seem right, try again.";
@@ -147,7 +148,8 @@ namespace GameEngine
 
                 if (GameBoardGenerator.PiecesInGoal(activePlayer) == Rules.PiecesPerPlayer)
                 {
-                    StatusMessage = $"All {player.Color} game pieces has reached the goal.!";
+                    StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal.!";
+                    StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal.!";
                     ActionMessage = "Yeaaaah! You won the game!.";
                     running = false;
                     Draw.Update(Draw.Scene.MainMenu);
@@ -289,9 +291,9 @@ namespace GameEngine
         }
         bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
 
-        bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece - 1].IsPlacedOnBoard == true;
+        bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece].IsPlacedOnBoard == true;
         
-        bool PiecesInGoal(int selectedPiece, Player player) => player.Pieces[selectedPiece - 1].HasFinished == true;
+        bool PiecesInGoal(int selectedPiece, Player player) => player.Pieces[selectedPiece].HasFinished == true;
 
         public void UpdateGameInfoToDB(GamePiece piece)
         {
