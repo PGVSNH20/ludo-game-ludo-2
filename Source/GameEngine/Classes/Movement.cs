@@ -102,6 +102,9 @@ namespace GameEngine.Classes
             var originalBoard = Game.OriginalGameBoard[row, column];
             var playerID = gamePiece.PlayerId;
 
+
+
+
             //TODO: Messaging here to keep the players slightly less confused
             //If nest of the same color, move player to InnerPath towards the goal
             if (originalBoard.GetType() == typeof(Nest) && (originalBoard as Nest).PlayerId == playerID && gamePiece.IsPlacedOnBoard)
@@ -141,18 +144,57 @@ namespace GameEngine.Classes
                 return false;
             }
 
-            int pieceID = -1;            
-            for (int i = 0; i < Game.Players[gamePiece.PlayerId].Pieces.Count; i++)
-            {
-                if (Game.Players[gamePiece.PlayerId].Pieces[i].Equals(gamePiece))
-                {
-                    pieceID = i+1;
-                }
-            }
+            int pieceID = GetPieceIdFromIndex(gamePiece);
+      
             Game.SetStatusMessage($"Player {Game.Players[gamePiece.PlayerId].Color} moved piece {pieceID}");
             return true;
         }
+        static public int GetPieceIdFromIndex(GamePiece piece)
+        {
+            for (int i = 0; i < Game.Players[piece.PlayerId].Pieces.Count; i++)
+            {
+                if (Game.Players[piece.PlayerId].Pieces[i].Equals(piece))
+                    return i + 1;
+            }
+            return -1; 
+                
+        }
+        public bool CheckTypeOfBoardSubjects(object boardObj, int playerID, bool isFinalStep, ref GamePiece gamePiece)
+        {
 
+            switch (boardObj )
+            {
+                case Nest nest when nest.PlayerId.Equals(playerID) && gamePiece.IsPlacedOnBoard:
+                    
+                    gamePiece.OnInnerPath = true;
+                    return true;
+                case GamePiece piece when piece.PlayerId == playerID:
+                    
+                    Game.SetStatusMessage($"You can't move past your own piece!");
+                    return false;
+                case GamePiece piece when isFinalStep:
+                    
+                    Knuff(piece);
+                    Game.SetStatusMessage($"Player {GetColorFrom(piece)}'s piece was knuff'd! Oh no!");
+                    return true;
+                case Goal when isFinalStep:
+                    
+                    gamePiece.IsPlacedOnBoard = false;
+                    gamePiece.HasFinished = true;
+                    Game.SetStatusMessage($"One of the player {GetColorFrom(gamePiece)}'s piece reached the goal!");
+                    return true;
+                case Goal:
+                Game.SetStatusMessage($"You missed the goal! :( ");
+                    return false;
+
+                default:
+                    break;
+            }
+            return false;
+
+        }
+
+        public ConsoleColor GetColorFrom(GamePiece id) => Game.Players[id.PlayerId].Color;
         public static void Knuff(GamePiece piece)
         {
             piece.IsPlacedOnBoard = false;
