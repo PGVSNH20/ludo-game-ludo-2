@@ -30,6 +30,8 @@ namespace GameEngine
 
         //Whose turn is it
         private int activePlayer = 0;
+
+        //TODO: Set current save if we load from one
         private int currentSave = -1;
 
         public Game(Rules rules, SaveGame saveGame = null)
@@ -39,6 +41,8 @@ namespace GameEngine
             Players = AddPlayers(rules.NumberOfPlayers);
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
             OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
+
+            //TODO: Add loading for saved games
 
             //TODO: Dictionary for status messages?
 
@@ -64,8 +68,7 @@ namespace GameEngine
                     case 's':
                         DbModel.SaveGame(Players, activePlayer, currentSave);
                         running = false;
-                        Draw.Update(Draw.Scene.MainMenu);
-                        break;
+                        return;
 
                     case ' ':
 
@@ -158,7 +161,7 @@ namespace GameEngine
                     StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal!";
                     ActionMessage = $"Yeaaaah! {Players[activePlayer].Color} won the game!";
                     Update();
-
+                    DbModel.RemoveSaveGame(saveGame);
                     running = false;
                     Draw.Update(Draw.Scene.MainMenu);
                 }

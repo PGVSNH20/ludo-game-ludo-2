@@ -8,6 +8,8 @@ namespace GameEngine.Classes
 {
     public class Rules
     {
+        public int RulesId { get; set; }
+        public int SaveGameId { get; set; }
         public int NumberOfPlayers { get; set; }
         public int PiecesPerPlayer { get; set; }
         public bool ThrowAgainOnSixEnabled { get; set; }

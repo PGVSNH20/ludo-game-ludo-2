@@ -60,7 +60,7 @@ namespace GameEngine
 
                 case Scene.LoadGame:
                     DrawLogo();
-                    DrawSavedGames(listFromDB, selected);
+                    //DrawSavedGames(listFromDB, selected);
                     break;
 
                 case Scene.HighScore:
@@ -139,7 +139,7 @@ namespace GameEngine
 
             for (int i = 0; i < menu.Count; i++)
             {
-                currentOption = menu[i].Id.ToString();
+                currentOption = menu[i].SaveGameId.ToString();
                 string prefix;
 
                 if (i == selected)

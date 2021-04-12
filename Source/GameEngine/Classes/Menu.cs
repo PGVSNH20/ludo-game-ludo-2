@@ -78,10 +78,24 @@ namespace GameEngine.Classes
                     Console.WriteLine("Starting game...");
                     Thread.Sleep(2000);
                     Game game = new Game(rules);
-
+                    current = Draw.Scene.MainMenu;
                     Update();
-
                 }
+
+                else if (input.Key == ConsoleKey.Enter && current == Draw.Scene.LoadGame)
+                {
+                    //TODO: Fix loading here (selectedoption)
+                    
+
+                    current = Draw.Scene.Game;
+                    rules.NumberOfPlayers = selectedOption + 2;
+                    Console.WriteLine("Starting game...");
+                    Thread.Sleep(2000);
+                    Game game = new Game(rules);
+                    current = Draw.Scene.MainMenu;
+                    Update();
+                }
+
                 else if (input.Key == ConsoleKey.Enter && selectedOption == 0 && current == Draw.Scene.MainMenu)
                 {
                     
@@ -145,7 +159,7 @@ namespace GameEngine.Classes
         }
 
 
-        public static List<SaveGame> LoadGame()
+        public static string[] LoadGame()
         {
 
             var listFromDB = FromDB();
@@ -154,7 +168,7 @@ namespace GameEngine.Classes
             //int id = 1;
             //string[] loadGame = { "Något sparat spel från databasen" };
 
-            return listFromDB;
+            return new string[0];
         }
 
         //private static List<string> FromDB()
@@ -170,27 +184,11 @@ namespace GameEngine.Classes
 
         private static List<SaveGame> FromDB()
         {
-
-            List<SaveGame> data = new List<SaveGame>();
-
-            data.Add(new SaveGame { Id = 1, Date = DateTime.Now });
-            data.Add(new SaveGame { Id = 2, Date = DateTime.Now });
-            data.Add(new SaveGame { Id = 3, Date = DateTime.Now });
-            data.Add(new SaveGame { Id = 4, Date = DateTime.Now });
-
-
+            var context = new DbModel();
+            List<SaveGame> data = context.SaveGames.ToList();
             return data;
-
-           
         }
-
-
-
-
-
-
+        
         private void Update() => Draw.Update(current, null, selectedOption);
-
-
     }
 }
