@@ -14,9 +14,9 @@ namespace GameEngine
         [ForeignKey("SaveGame")]
         public int SaveGameId { get; set; } = -1;
 
-        public int Row { get; }
+        public int Row { get; set; }
 
-        public int Col { get; }
+        public int Col { get; set; }
 
         public List<GamePiece> Pieces;
 

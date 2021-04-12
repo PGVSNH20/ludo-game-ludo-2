@@ -60,7 +60,7 @@ namespace GameEngine
 
                 case Scene.LoadGame:
                     DrawLogo();
-                    //DrawSavedGames(listFromDB, selected);
+                    DrawSavedGames(selected);
                     break;
 
                 case Scene.HighScore:
@@ -133,50 +133,24 @@ namespace GameEngine
         }
 
 
-        public static void DrawSavedGames(List<SaveGame> menu, int selected = 0)
+        public static void DrawSavedGames(int selected)
         {
-            string currentOption;
-
-            for (int i = 0; i < menu.Count; i++)
+            var result = new List<string>();
+            var context = new DbModel();
+            foreach (var saveGame in context.SaveGames)
             {
-                currentOption = menu[i].SaveGameId.ToString();
-                string prefix;
-
-                if (i == selected)
-                {
-                    prefix = "*";
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.BackgroundColor = ConsoleColor.Green;
-
-                }
-
-                else
-                {
-                    prefix = "";
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.BackgroundColor = ConsoleColor.Black;
-                }
-
-
-                Console.WriteLine($"{prefix} << {currentOption} >>");
-
+                result.Add($"{saveGame.SaveGameId}. {saveGame.Date}");
             }
 
-
-            Console.BackgroundColor = standard;
-            Console.ForegroundColor = ConsoleColor.White;
-
-
+            DrawMenu(result.ToArray(), selected);
         }
 
 
         public static void DrawMenu(string[] menu, int selected = 0)
         {
-            string currentOption;
-
             for (int i = 0; i < menu.Length; i++)
             {
-                currentOption = menu[i];
+                var currentOption = menu[i];
                 string prefix;
 
                 if (i == selected)
@@ -203,7 +177,7 @@ namespace GameEngine
             Console.BackgroundColor = standard;
             Console.ForegroundColor = ConsoleColor.White;
 
-
+            selected = 0;
         }
 
         #endregion

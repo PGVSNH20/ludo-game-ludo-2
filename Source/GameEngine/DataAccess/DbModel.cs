@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data;
+using System.Reflection;
 using GameEngine.Classes;
 using GameEngine.Objects;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GameEngine
 {
@@ -22,48 +25,70 @@ namespace GameEngine
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //foreach (var entityType in modelBuilder.Model.GetEntityTypes())
+            //{
+            //    foreach (var property in entityType.GetProperties())
+            //    {
+            //        if (property.ClrType.is)
+            //        {
+            //            var converterType = typeof(CharToStringConverter)
+            //                .MakeGenericType(property.ClrType);
+            //            var converter = (ValueConverter)Activator.CreateInstance(converterType, (object)null);
+            //            property.SetValueConverter(converter);
+            //        }
+            //    }
+            //}
+
+            var charConverter = new CharToStringConverter();
+
             modelBuilder.Entity<Player>()
                 .HasMany(p => p.Pieces);
             modelBuilder.Entity<Player>().Ignore(t => t.Pieces);
+
+            modelBuilder.Entity<GamePiece>()
+                .Ignore(t => t.CharToDraw);
+
+
             base.OnModelCreating(modelBuilder);
         }
 
         public static void SaveGame(List<Player> players, int currentPlayer, int saveId)
         {
             Game.Rules.SaveGameId = saveId;
-
-            foreach (var player in players)
-            {
-                player.SaveGameId = saveId;
-                foreach (var piece in player.Pieces)
-                {
-                    var pos = GameBoardGenerator.FindObject(Game.GameBoard, piece);
-                    piece.Row = pos.Row;
-                    piece.Col = pos.Col;
-                }
-            }
-
             var context = new DbModel();
 
-            if (saveId < 0)
-            {
-                context.SaveGames.Add(new SaveGame(currentPlayer));
-                context.Rules.Add(new Rules(Game.Rules.NumberOfPlayers, Game.Rules.PiecesPerPlayer, Game.Rules.ThrowAgainOnSixEnabled, Game.Rules.InitialSixRuleEnabled));
-                //context.Rules.Add(Game.Rules);
+            //if (saveId < 0)
+            //{
+            context.SaveGames.Add(new SaveGame(currentPlayer));
+            saveId = context.SaveGames.Count() + 1;
+            context.Rules.Add(new Rules(Game.Rules.NumberOfPlayers, Game.Rules.PiecesPerPlayer, Game.Rules.ThrowAgainOnSixEnabled, Game.Rules.InitialSixRuleEnabled));
 
-                foreach (var player in players)
-                {
-                    context.Players.Add(player);
-                    foreach (var piece in player.Pieces)
-                    {
-                        context.Pieces.Add(piece);
-                    }
-                }
-            }
-            else
+            for (var i = 0; i < players.Count; i++)
             {
-                //TODO: Update existing
+                var player = players[i];
+                var newPlayer = new Player(Game.Rules.PiecesPerPlayer, players[i].Color, i, new Position(players[i].Row, players[i].Col));
+                newPlayer.SaveGameId = saveId;
+
+                for (var j = 0; j < player.Pieces.Count; j++)
+                {
+                    var piece = player.Pieces[j];
+                    var pos = GameBoardGenerator.FindObject(Game.GameBoard, piece);
+                    var newPiece = new GamePiece(j.ToString().First(), i);
+                    newPiece.Row = pos.Row;
+                    newPiece.Col = pos.Col;
+                    newPiece.SaveGameId = saveId;
+
+                    context.Pieces.Add(newPiece);
+                }
+
+                context.Players.Add(newPlayer);
             }
+
+            //}
+            //else
+            //{
+            //    //TODO: Update existing
+            //}
             context.SaveChanges();
         }
 

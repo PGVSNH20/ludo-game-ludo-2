@@ -79,20 +79,21 @@ namespace GameEngine.Classes
                     Thread.Sleep(2000);
                     Game game = new Game(rules);
                     current = Draw.Scene.MainMenu;
+                    selectedOption = 0;
                     Update();
                 }
 
                 else if (input.Key == ConsoleKey.Enter && current == Draw.Scene.LoadGame)
                 {
-                    //TODO: Fix loading here (selectedoption)
-                    
-
                     current = Draw.Scene.Game;
-                    rules.NumberOfPlayers = selectedOption + 2;
-                    Console.WriteLine("Starting game...");
+                    Console.WriteLine("Resuming game...");
                     Thread.Sleep(2000);
-                    Game game = new Game(rules);
+
+                    var context = new DbModel();
+                    Game game = new Game(context.Rules.Find(selectedOption + 1), context.SaveGames.Find(selectedOption + 1));
+
                     current = Draw.Scene.MainMenu;
+                    selectedOption = 0;
                     Update();
                 }
 

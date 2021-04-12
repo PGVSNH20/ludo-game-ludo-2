@@ -27,6 +27,15 @@ namespace GameEngine
         public static string ActionMessage { get; set; }
         public static List<Player> Players { get; set; }
 
+        private static List<ConsoleColor> playerColors = new() { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow };
+        private static List<Position> startingPositions = new()
+        {
+            new Position(0, 6),
+            new Position(6, 10),
+            new Position(10, 4),
+            new Position(4, 0),
+        };
+
         public static List<SaveGame> PositionsInGame { get; set; }
 
         //Whose turn is it
@@ -127,11 +136,6 @@ namespace GameEngine
 
                                 } while (ValidAmountOFGamePieces(validRange) == false);
                             }
-
-                            ////TODO: Put piece on board and fix with rules
-                            //PlacePieceOnBoard(activePlayer);
-                            //ActionMessage = $"fix";
-                            //Update();
                         }
                         else
                         {
@@ -151,8 +155,7 @@ namespace GameEngine
                                 if (TryMoveByValidInputRange(diceRoll, out activePiece))
                                 {
                                     Update();
-                                    Thread.Sleep(500);
-                                    break;
+                                    Thread.Sleep(1000);
                                 }
 
                             }
@@ -191,13 +194,10 @@ namespace GameEngine
                 //TODO: Validate that the piece is on the board
                 if (ValidInputRange(tempInput, out validRange) && IsGamePieceInGame(validRange, Players[activePlayer]))
                 {
-                    //ActionMessage = "";
-                    //TODO: Validate the move
                     activePiece = Players[activePlayer].Pieces[validRange];
                     Movement.MovePiece(activePiece, diceRoll);
                     //TODO: if false continue;
-
-                    StatusMessage = $"You chose piece {tempInput}!";
+                    
                     return true;
                 }
 
@@ -220,17 +220,7 @@ namespace GameEngine
         {
             List<Player> players = new List<Player>();
 
-            //TODO: Place these variables somewhere better?
-            var playerColors = new List<ConsoleColor>() { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow };
             //TODO: If not 4 players, fix starting positions. Also make it so nests and these get their positions from the same place.
-            var startingPositions = new List<Position>()
-            {
-                new Position(0, 6),
-                new Position(6, 10),
-                new Position(10, 4),
-                new Position(4, 0),
-            };
-
             for (int i = 0; i < numberOfPlayers; i++)
             {
                 //TODO: Let players change color?
@@ -322,18 +312,40 @@ namespace GameEngine
 
             activePlayer = saveGame.CurrentPlayer;
             Rules = context.Rules.Find(saveId);
-            Players = context.Players.ToList();
+            Rules.SaveGameId = saveId;
+            Players = context.Players.Where(x => x.SaveGameId == saveId).ToList();
 
             for (int i = 0; i < Players.Count; i++)
             {
-                Players[i].Pieces = context.Pieces.Where(p => p.PlayerId == i && p.SaveGameId == saveId).ToList();
+                Players[i].Color = playerColors[i];
+                Players[i].Row = startingPositions[i].Row;
+                Players[i].Col = startingPositions[i].Col;
+                Players[i].Pieces = new List<GamePiece>();
+                var loadedPieces = context.Pieces.Where(p => p.PlayerId == i && p.SaveGameId == saveId).ToList();
+
+                for (int j = 0; j < loadedPieces.Count; j++)
+                {
+                    var newPiece = new GamePiece((j + 1).ToString().First(), i);
+                    newPiece.Row = loadedPieces[j].Row;
+                    newPiece.Col = loadedPieces[j].Row;
+                    newPiece.IsPlacedOnBoard = loadedPieces[j].IsPlacedOnBoard;
+                    newPiece.OnInnerPath = loadedPieces[j].OnInnerPath;
+                    newPiece.HasFinished = loadedPieces[j].HasFinished;
+                    newPiece.SaveGameId = loadedPieces[j].SaveGameId;
+                    Players[i].Pieces.Add(newPiece);
+                }
             }
 
             foreach (var player in Players)
             {
-                foreach (var piece in player.Pieces)
+                for (var i = 0; i < player.Pieces.Count; i++)
                 {
-                    GameBoard[piece.Row, piece.Col] = piece;
+                    var piece = player.Pieces[i];
+
+                    if (piece.Row != 0 && piece.Col != 0)
+                    {
+                        GameBoard[piece.Row, piece.Col] = piece;
+                    }
                 }
             }
         }
