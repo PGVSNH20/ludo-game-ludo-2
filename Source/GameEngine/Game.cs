@@ -153,6 +153,10 @@ namespace GameEngine
                     running = false;
                     Draw.Update(Draw.Scene.MainMenu);
                 }
+
+                //Reset goal to proper symbol
+                GameBoard[5, 5] = OriginalGameBoard[5, 5];
+
                 UpdateGameInfoToDB(activePiece);
                 EndTurn();
             }

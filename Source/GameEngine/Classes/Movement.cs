@@ -106,11 +106,27 @@ namespace GameEngine.Classes
 
 
             //TODO: Messaging here to keep the players slightly less confused
-            //If nest of the same color, move player to InnerPath towards the goal
-            if (originalBoard.GetType() == typeof(Nest) && (originalBoard as Nest).PlayerId == playerID && gamePiece.IsPlacedOnBoard)
+            if (originalBoard.GetType() == typeof(Goal) && isFinalStep)
             {
-                gamePiece.OnInnerPath = true;               
-                //TODO: Fix innerpath movement logic
+                //TODO: Piece reached the goal logic
+                //TODO: Check gamestate and potentially finish the game
+                gamePiece.IsPlacedOnBoard = false;
+                /*gamePiece.OnInnerPath = false;*/ // Comment out?
+                gamePiece.HasFinished = true;
+                Game.SetStatusMessage($"One of player {Game.Players[gamePiece.PlayerId].Color}'s pieces reached the goal!");
+                //On inner path still?
+                return true;
+            }
+            else if (originalBoard.GetType() == typeof(Goal))
+            {
+                //Piece missed the goal
+                Game.SetStatusMessage($"You missed the goal! :(");
+                return false;
+            }
+            //If nest of the same color, move player to InnerPath towards the goal
+            else if (originalBoard.GetType() == typeof(Nest) && (originalBoard as Nest).PlayerId == playerID && gamePiece.IsPlacedOnBoard)
+            {
+                gamePiece.OnInnerPath = true;
                 return true;
             }
             //If piece of own color is found along the way, move is not valid
@@ -126,27 +142,10 @@ namespace GameEngine.Classes
                 Game.SetStatusMessage($"Player {Game.Players[(boardObject as GamePiece).PlayerId].Color}'s piece was knuff'd! Oh no!");
                 return true;
             }
-            else if (originalBoard.GetType() == typeof(Goal) && isFinalStep)
-            {
-                //TODO: Piece reached the goal logic
-                //TODO: Check gamestate and potentially finish the game
-                gamePiece.IsPlacedOnBoard = false;
-                /*gamePiece.OnInnerPath = false;*/ // Comment out?
-                gamePiece.HasFinished = true;
-                Game.SetStatusMessage($"One of the player {Game.Players[gamePiece.PlayerId].Color}'s piece reached the goal!");
-                //On inner path still?
-                return true;
-            }
-            else if (originalBoard.GetType() == typeof(Goal))
-            {
-                //Piece missed the goal
-                Game.SetStatusMessage($"You missed the goal! :( ");
-                return false;
-            }
 
             int pieceID = GetPieceIdFromIndex(gamePiece);
       
-            Game.SetStatusMessage($"Player {Game.Players[gamePiece.PlayerId].Color} moved piece {pieceID}");
+            Game.SetStatusMessage($"Player {Game.Players[gamePiece.PlayerId].Color} moved piece {pieceID}.");
             return true;
         }
         static public int GetPieceIdFromIndex(GamePiece piece)
