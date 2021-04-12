@@ -99,7 +99,7 @@ namespace GameEngine.Classes
 
                 else if (input.Key == ConsoleKey.Enter && selectedOption == 1 && current == Draw.Scene.MainMenu)
                 {
-                    //current = Draw.Scene.LoadGame;
+                    current = Draw.Scene.LoadGame;
                     Update();
                 }
 
@@ -145,12 +145,48 @@ namespace GameEngine.Classes
         }
 
 
-        public static string[] LoadGame()
+        public static List<SaveGame> LoadGame()
         {
-            string[] loadGame = { "Något sparat spel från databasen" };
 
-            return loadGame;
+            var listFromDB = FromDB();
+
+            //DateTime dateTime = DateTime.Now;
+            //int id = 1;
+            //string[] loadGame = { "Något sparat spel från databasen" };
+
+            return listFromDB;
         }
+
+        //private static List<string> FromDB()
+        //{
+
+        //    var listSavedGames = new List<string> { "1", "2", "3", }; 
+
+        //    //listSavedGames.Add("1"),
+                
+            
+            
+        //}
+
+        private static List<SaveGame> FromDB()
+        {
+
+            List<SaveGame> data = new List<SaveGame>();
+
+            data.Add(new SaveGame { Id = 1, Date = DateTime.Now });
+            data.Add(new SaveGame { Id = 2, Date = DateTime.Now });
+            data.Add(new SaveGame { Id = 3, Date = DateTime.Now });
+            data.Add(new SaveGame { Id = 4, Date = DateTime.Now });
+
+
+            return data;
+
+           
+        }
+
+
+
+
 
 
         private void Update() => Draw.Update(current, null, selectedOption);

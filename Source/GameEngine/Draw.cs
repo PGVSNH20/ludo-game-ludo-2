@@ -42,6 +42,7 @@ namespace GameEngine
             var optionsStartNewGame = Menu.OptionsStartNewGame();
             var loadGame = Menu.LoadGame();
             var highScore = Menu.HighScore();
+            var listFromDB = Menu.LoadGame();
 
             Console.Clear();
             switch (scene)
@@ -59,7 +60,7 @@ namespace GameEngine
 
                 case Scene.LoadGame:
                     DrawLogo();
-                    DrawMenu(loadGame, selected);
+                    DrawSavedGames(listFromDB, selected);
                     break;
 
                 case Scene.HighScore:
@@ -130,6 +131,44 @@ namespace GameEngine
         {
             ColorFormattedWriteLine(message);
         }
+
+
+        public static void DrawSavedGames(List<SaveGame> menu, int selected = 0)
+        {
+            string currentOption;
+
+            for (int i = 0; i < menu.Count; i++)
+            {
+                currentOption = menu[i].Id.ToString();
+                string prefix;
+
+                if (i == selected)
+                {
+                    prefix = "*";
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.BackgroundColor = ConsoleColor.Green;
+
+                }
+
+                else
+                {
+                    prefix = "";
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.BackgroundColor = ConsoleColor.Black;
+                }
+
+
+                Console.WriteLine($"{prefix} << {currentOption} >>");
+
+            }
+
+
+            Console.BackgroundColor = standard;
+            Console.ForegroundColor = ConsoleColor.White;
+
+
+        }
+
 
         public static void DrawMenu(string[] menu, int selected = 0)
         {

@@ -31,7 +31,7 @@ namespace GameEngine
         //Whose turn is it
         private int activePlayer = 0;
 
-        public Game(Rules rules)
+        public Game(Rules rules, SaveGame saveGame = null)
         {
             //Initializing
             Rules = rules;
