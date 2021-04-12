@@ -2,7 +2,9 @@
 using GameEngine.Objects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using GameEngine.Classes;
@@ -11,7 +13,10 @@ namespace GameEngine
 {
     public class GamePiece : IBoardObject
     {
+        public int GamePieceId { get; set; }
+
         public char CharToDraw { get; }
+
         public int PlayerId { get; set; }
 
         public bool IsPlacedOnBoard { get; set; } = false;
@@ -20,8 +25,14 @@ namespace GameEngine
 
         public bool HasFinished { get; set; } = false;
 
-        public Position Position { get; set; }
+        public int Row { get; set; }
 
+        public int Col { get; set; }
+
+        public GamePiece()
+        {
+            
+        }
 
         public GamePiece(char charToDraw, int playerID)
         {

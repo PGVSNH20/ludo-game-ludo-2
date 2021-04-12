@@ -1,24 +1,36 @@
 ﻿using GameEngine.Objects;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using GameEngine.Classes;
 
 namespace GameEngine
 {
     public class Player
     {
-        public int Id { get; set; }
-        public Position StartPosition { get; }
+        public int PlayerId { get; set; }
+
+        public int SaveGameId { get; set; } = -1;
+
+        public int Row { get; }
+
+        public int Col { get; }
 
         public List<GamePiece> Pieces;
-       
+
         public ConsoleColor Color;
+
+        public Player()
+        {
+
+        }
 
         public Player(int numberOfPieces, ConsoleColor color, int playerId, Position startPosition)
         {
             Color = color;
             Pieces = new List<GamePiece>();
-            StartPosition = startPosition;
+            Row = startPosition.Row;
+            Col = startPosition.Col;
 
             for (int i = 0; i < numberOfPieces; i++)
             {
