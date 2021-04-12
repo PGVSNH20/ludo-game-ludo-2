@@ -1,6 +1,7 @@
 ﻿using GameEngine.Objects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Numerics;
 using GameEngine.Classes;
 
@@ -10,6 +11,7 @@ namespace GameEngine
     {
         public int PlayerId { get; set; }
 
+        [ForeignKey("SaveGame")]
         public int SaveGameId { get; set; } = -1;
 
         public int Row { get; }

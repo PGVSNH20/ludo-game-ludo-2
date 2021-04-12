@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,12 +38,16 @@ namespace GameEngine
         public Game(Rules rules, SaveGame saveGame = null)
         {
             //Initializing
-            Rules = rules;
+            Rules = rules; //TODO: Correct rules when loading for player count
             Players = AddPlayers(rules.NumberOfPlayers);
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
             OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
 
-            //TODO: Add loading for saved games
+            //Loading for saved games
+            if (saveGame != null)
+            {
+                LoadGame(saveGame);
+            }
 
             //TODO: Dictionary for status messages?
 
@@ -289,6 +294,7 @@ namespace GameEngine
 
             return drawableChars;
         }
+
         bool ValidInputRange(char tempInput, out int outputRange)
         {
             //validInput = int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
@@ -303,8 +309,33 @@ namespace GameEngine
             else return false;
 
         }
+
         bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
 
         bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece].IsPlacedOnBoard;
+
+        private void LoadGame(SaveGame saveGame)
+        {
+            var saveId = saveGame.SaveGameId;
+
+            var context = new DbModel();
+
+            activePlayer = saveGame.CurrentPlayer;
+            Rules = context.Rules.Find(saveId);
+            Players = context.Players.ToList();
+
+            for (int i = 0; i < Players.Count; i++)
+            {
+                Players[i].Pieces = context.Pieces.Where(p => p.PlayerId == i && p.SaveGameId == saveId).ToList();
+            }
+
+            foreach (var player in Players)
+            {
+                foreach (var piece in player.Pieces)
+                {
+                    GameBoard[piece.Row, piece.Col] = piece;
+                }
+            }
+        }
     }
 }

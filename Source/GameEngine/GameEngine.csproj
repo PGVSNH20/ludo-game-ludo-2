@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <Folder Include="Documentation\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

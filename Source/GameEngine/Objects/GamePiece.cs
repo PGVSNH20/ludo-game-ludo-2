@@ -19,6 +19,9 @@ namespace GameEngine
 
         public int PlayerId { get; set; }
 
+        [ForeignKey("SaveGame")]
+        public int SaveGameId { get; set; } = -1;
+
         public bool IsPlacedOnBoard { get; set; } = false;
 
         public bool OnInnerPath { get; set; } = false;

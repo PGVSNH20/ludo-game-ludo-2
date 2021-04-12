@@ -48,7 +48,8 @@ namespace GameEngine
             if (saveId < 0)
             {
                 context.SaveGames.Add(new SaveGame(currentPlayer));
-                context.Rules.Add(Game.Rules);
+                context.Rules.Add(new Rules(Game.Rules.NumberOfPlayers, Game.Rules.PiecesPerPlayer, Game.Rules.ThrowAgainOnSixEnabled, Game.Rules.InitialSixRuleEnabled));
+                //context.Rules.Add(Game.Rules);
 
                 foreach (var player in players)
                 {
