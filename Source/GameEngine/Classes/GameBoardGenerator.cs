@@ -135,16 +135,16 @@ namespace GameEngine.Objects
         public static void PlacePieceOnBoard(int playerId)
         {
             var player = Game.Players[playerId];
-            var entryPosition = Game.GameBoard[player.StartPosition.Row, player.StartPosition.Col];
+            var entryPosition = Game.GameBoard[player.Row, player.Col];
 
             foreach (var piece in Game.Players[playerId].Pieces)
             {
                 if (!piece.IsPlacedOnBoard && !piece.HasFinished)
                 {
                     //TODO: Make sure piece logic is correct
-                    if (Movement.TryMove(piece, player.StartPosition, true))
+                    if (Movement.TryMove(piece, new Position(player.Row, player.Col), true))
                     {
-                        Game.GameBoard[player.StartPosition.Row, player.StartPosition.Col] = piece;
+                        Game.GameBoard[player.Row, player.Col] = piece;
                         piece.IsPlacedOnBoard = true;
                         return;
                     }  

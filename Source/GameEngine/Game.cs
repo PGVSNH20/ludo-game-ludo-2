@@ -30,6 +30,7 @@ namespace GameEngine
 
         //Whose turn is it
         private int activePlayer = 0;
+        private int currentSave = -1;
 
         public Game(Rules rules)
         {
@@ -38,11 +39,6 @@ namespace GameEngine
             Players = AddPlayers(rules.NumberOfPlayers);
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
             OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
-
-            PositionsInGame = InitiateGameToDb(Players);
-
-
-
 
             //TODO: Dictionary for status messages?
 
@@ -66,7 +62,7 @@ namespace GameEngine
                 switch (input)
                 {
                     case 's':
-                        SaveGameToDB(Players);
+                        DbModel.SaveGame(Players, activePlayer, currentSave);
                         running = false;
                         Draw.Update(Draw.Scene.MainMenu);
                         break;
@@ -117,9 +113,9 @@ namespace GameEngine
                                         break;
                                     }
 
-                                   StatusMessage = $"That didn't seem right, {Players[activePlayer].Color}, try again.";
-                                   ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
-                                
+                                    StatusMessage = $"That didn't seem right, {Players[activePlayer].Color}, try again.";
+                                    ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
+
 
                                 } while (ValidAmountOFGamePieces(validRange) == false);
                             }
@@ -306,61 +302,6 @@ namespace GameEngine
         }
         bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
 
-        bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece].IsPlacedOnBoard == true;
-
-        bool PiecesInGoal(int selectedPiece, Player player) => player.Pieces[selectedPiece].HasFinished == true;
-
-        public List<SaveGame> InitiateGameToDb(List<Player> players)
-        {
-            var positions = new List<SaveGame>();
-
-            for (int index = 0; index < players.Count; index++)
-            {
-                var color = players[index].Color;
-
-                positions.Add(new SaveGame(index, color));
-            }
-            return positions;
-        }
-        public void SaveGameToDB(List<Player> players)
-        {
-            var context = new GameContext();
-            
-
-
-
-            var positions = new List<SaveGame>();
-            SaveGame result;
-
-            for (int index = 0; index < players.Count; index++)
-            {
-                var colorPlayer = players[index].Color;
-            
-                var playerGP = players[index].Pieces;
-
-                List<string> positionsStr = new List<string>();
-                
-                for (int i = 0; i < playerGP.Count ; i++)
-                {
-                    positionsStr.Add(GameBoardGenerator.FindObject(Game.GameBoard, playerGP[i]).ToString());
-
-                }
-
-                result = new SaveGame()
-                {
-                    PlayerId = index,
-                    GamePiece1 = positionsStr[0],
-                    GamePiece2 = positionsStr[1],
-                    GamePiece3 = positionsStr[2],
-                    GamePiece4 = positionsStr[3], 
-                    Color = colorPlayer.ToString()
-                };
-                positions.Add(result);
-                context.GameInProgress.Add(result);
-            }
-
-
-        
+        bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece].IsPlacedOnBoard;
     }
-}
 }
