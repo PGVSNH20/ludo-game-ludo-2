@@ -64,7 +64,7 @@ namespace GameEngine
 
                         diceRoll = dice.Roll();
 
-                        StatusMessage = $"You rolled {diceRoll}!";
+                        StatusMessage = $"{Players[activePlayer].Color} rolled {diceRoll}!";
 
                         //MOVEMENT LOGIC
                         int validRange;
@@ -76,12 +76,12 @@ namespace GameEngine
                             //TODO: Six rule
                             if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0) 
                             {
-                                StatusMessage = $"You rolled {diceRoll} and placed a piece on the board!";
+                                StatusMessage = $"{Players[activePlayer].Color} rolled {diceRoll} and placed a piece on the board!";
                                 GameBoardGenerator.PlacePieceOnBoard(activePlayer);
                             }
                             else
                             {
-                                StatusMessage = $"You rolled {diceRoll}! You can place a new piece on the board or move one.";
+                                StatusMessage = $"{Players[activePlayer].Color} rolled {diceRoll}! You can place a new piece on the board or move one.";
                                 ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
                                 Update();
 
@@ -106,7 +106,7 @@ namespace GameEngine
                                         break;
                                    }
 
-                                   StatusMessage = $"That didn't seem right, try again.";
+                                   StatusMessage = $"That didn't seem right, {Players[activePlayer].Color}, try again.";
                                    ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
                                 
 
@@ -122,14 +122,14 @@ namespace GameEngine
                         {
                             if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0)
                             {
-                                StatusMessage = $"You rolled {diceRoll}!";
+                                StatusMessage = $"{Players[activePlayer].Color} rolled {diceRoll}!";
                                 ActionMessage = "But you need 1 or 6 to put a piece on the board...";
                                 Update();
                                 Thread.Sleep(1500);
                             }
                             else
                             {
-                                StatusMessage = $"You rolled {diceRoll}!";
+                                StatusMessage = $"{Players[activePlayer].Color} rolled {diceRoll}!";
                                 ActionMessage = "Choose which piece to move...";
                                 Update();
 
@@ -148,9 +148,8 @@ namespace GameEngine
 
                 if (GameBoardGenerator.PiecesInGoal(activePlayer) == Rules.PiecesPerPlayer)
                 {
-                    StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal.!";
-                    StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal.!";
-                    ActionMessage = "Yeaaaah! You won the game!.";
+                    StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal!";
+                    ActionMessage = $"Yeaaaah! {Players[activePlayer].Color} won the game!";
                     running = false;
                     Draw.Update(Draw.Scene.MainMenu);
                 }
