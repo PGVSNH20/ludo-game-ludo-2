@@ -67,6 +67,11 @@ namespace GameEngine.Classes
 
                 else if (input.Key == ConsoleKey.Enter && current == Draw.Scene.OptionsMenu)
                 {
+                    //TODO: Fix playing with less than 4 players
+                    if (selectedOption < 2)
+                    {
+                        selectedOption = 2;
+                    }
 
                     current = Draw.Scene.Game;
                     rules.NumberOfPlayers = selectedOption + 2;

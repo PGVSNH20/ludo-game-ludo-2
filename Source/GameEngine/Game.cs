@@ -150,6 +150,8 @@ namespace GameEngine
                 {
                     StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal!";
                     ActionMessage = $"Yeaaaah! {Players[activePlayer].Color} won the game!";
+                    Update();
+
                     running = false;
                     Draw.Update(Draw.Scene.MainMenu);
                 }
