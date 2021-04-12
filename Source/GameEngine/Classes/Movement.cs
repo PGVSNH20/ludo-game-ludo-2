@@ -42,14 +42,14 @@ namespace GameEngine.Classes
             {
                 //TODO: Inner path code
                 int offset = 0;
-                var currentDicePostion = 1 + i;
+                var currentDicePosition = 1 + i;
 
-                if (traversablePos + currentDicePostion >= currentPath.Count)
+                if (traversablePos + currentDicePosition >= currentPath.Count)
                 {
                     offset = 0 - currentPath.Count;
                 }
 
-                var nextStep = currentPath[traversablePos + currentDicePostion + offset];
+                var nextStep = currentPath[traversablePos + currentDicePosition + offset];
 
                 bool finalStep = i == diceRoll - 1;
 
@@ -64,8 +64,8 @@ namespace GameEngine.Classes
                 {
                     currentPath = Player.GetAllInnerPaths();
 
-                    diceRoll -= currentDicePostion;
-                    currentDicePostion = 0;
+                    diceRoll -= currentDicePosition;
+                    currentDicePosition = 0;
                     offset = 0;
                     i = -1;
 
@@ -74,7 +74,7 @@ namespace GameEngine.Classes
                     onInnerPath = true;
                 }
                 //TODO: If final move is not valid, don't move at all
-                newPosition = currentPath[traversablePos + currentDicePostion + offset];
+                newPosition = currentPath[traversablePos + currentDicePosition + offset];
             }
             //Place piece on new position and set the old position to the original value when we created the board
             Game.GameBoard[newPosition.Row, newPosition.Col] = piece;

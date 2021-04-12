@@ -7,7 +7,7 @@ namespace GameEngine
 {
     public class Player
     {
-
+        public int Id { get; set; }
         public Position StartPosition { get; }
 
         public List<GamePiece> Pieces;

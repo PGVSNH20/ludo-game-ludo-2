@@ -2,6 +2,7 @@
 using System.Threading;
 using GameEngine;
 using GameEngine.Classes;
+using Microsoft.EntityFrameworkCore;
 using Ludo.Classes;
 
 namespace Ludo

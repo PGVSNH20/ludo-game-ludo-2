@@ -26,7 +26,7 @@ namespace GameEngine
         public static string ActionMessage { get; set; }
         public static List<Player> Players { get; set; }
 
-        public static List<Result> PositionsInGame { get; set; } = new List<Result>();
+        public static List<SaveGame> PositionsInGame { get; set; }
 
         //Whose turn is it
         private int activePlayer = 0;
@@ -39,8 +39,10 @@ namespace GameEngine
             GameBoard = GameBoardGenerator.Generate(11, 11, Players);
             OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
 
-            GamePiece activePiece = Players[activePlayer].Pieces.Where(gp => gp.IsPlacedOnBoard == true).FirstOrDefault();
-           
+            PositionsInGame = InitiateGameToDb(Players);
+
+
+
 
             //TODO: Dictionary for status messages?
 
@@ -57,9 +59,18 @@ namespace GameEngine
                 Update();
                 var input = GetInput();
 
+
+                GamePiece activePiece;
+
                 //TODO: Validate input
                 switch (input)
                 {
+                    case 's':
+                        SaveGameToDB(Players);
+                        running = false;
+                        Draw.Update(Draw.Scene.MainMenu);
+                        break;
+
                     case ' ':
 
                         diceRoll = dice.Roll();
@@ -74,7 +85,7 @@ namespace GameEngine
                         if (luckyThrow && GameBoardGenerator.PiecesOnBoard(activePlayer) < Rules.PiecesPerPlayer)
                         {
                             //TODO: Six rule
-                            if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0) 
+                            if (GameBoardGenerator.PiecesOnBoard(activePlayer) == 0)
                             {
                                 StatusMessage = $"You rolled {diceRoll} and placed a piece on the board!";
                                 GameBoardGenerator.PlacePieceOnBoard(activePlayer);
@@ -88,27 +99,27 @@ namespace GameEngine
                                 do
                                 {
 
-                                   char tempInput = GetInput();
+                                    char tempInput = GetInput();
 
-                                   if (tempInput == ' ')
-                                   {
-                                       GameBoardGenerator.PlacePieceOnBoard(activePlayer);
-                                       break;
-                                   }
-                                   //TODO: Validate that the piece is on the board and maybe make a function for this to avoid redundancy
-                                   else if (ValidInputRange(tempInput, out validRange))
-                                   {
+                                    if (tempInput == ' ')
+                                    {
+                                        GameBoardGenerator.PlacePieceOnBoard(activePlayer);
+                                        break;
+                                    }
+                                    //TODO: Validate that the piece is on the board and maybe make a function for this to avoid redundancy
+                                    else if (ValidInputRange(tempInput, out validRange))
+                                    {
                                         //TODO: Validate the move
                                         activePiece = Players[activePlayer].Pieces[validRange];
                                         Movement.MovePiece(activePiece, diceRoll);
                                         Update();
                                         Thread.Sleep(1500);
                                         break;
-                                   }
+                                    }
 
-                                   StatusMessage = $"That didn't seem right, try again.";
-                                   ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
-                                
+                                    StatusMessage = $"That didn't seem right, try again.";
+                                    ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
+
 
                                 } while (ValidAmountOFGamePieces(validRange) == false);
                             }
@@ -139,7 +150,7 @@ namespace GameEngine
                                     Thread.Sleep(500);
                                     break;
                                 }
-                                   
+
                             }
                         }
 
@@ -154,7 +165,7 @@ namespace GameEngine
                     running = false;
                     Draw.Update(Draw.Scene.MainMenu);
                 }
-                UpdateGameInfoToDB(activePiece);
+
                 EndTurn();
             }
         }
@@ -272,7 +283,7 @@ namespace GameEngine
                     }
                 }
             }
-            
+
             return drawableChars;
         }
         bool ValidInputRange(char tempInput, out int outputRange)
@@ -292,13 +303,60 @@ namespace GameEngine
         bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
 
         bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece].IsPlacedOnBoard == true;
-        
+
         bool PiecesInGoal(int selectedPiece, Player player) => player.Pieces[selectedPiece].HasFinished == true;
 
-        public void UpdateGameInfoToDB(GamePiece piece)
+        public List<SaveGame> InitiateGameToDb(List<Player> players)
         {
-            Position position = GameBoardGenerator.FindObject(Game.GameBoard, piece);      
+            var positions = new List<SaveGame>();
 
+            for (int index = 0; index < players.Count; index++)
+            {
+                var color = players[index].Color;
+
+                positions.Add(new SaveGame(index, color));
+            }
+            return positions;
         }
+        public void SaveGameToDB(List<Player> players)
+        {
+            var context = new GameContext();
+            
+
+
+
+            var positions = new List<SaveGame>();
+            SaveGame result;
+
+            for (int index = 0; index < players.Count; index++)
+            {
+                var colorPlayer = players[index].Color;
+            
+                var playerGP = players[index].Pieces;
+
+                List<string> positionsStr = new List<string>();
+                
+                for (int i = 0; i < playerGP.Count ; i++)
+                {
+                    positionsStr.Add(GameBoardGenerator.FindObject(Game.GameBoard, playerGP[i]).ToString());
+
+                }
+
+                result = new SaveGame()
+                {
+                    PlayerId = index,
+                    GamePiece1 = positionsStr[0],
+                    GamePiece2 = positionsStr[1],
+                    GamePiece3 = positionsStr[2],
+                    GamePiece4 = positionsStr[3], 
+                    Color = colorPlayer.ToString()
+                };
+                positions.Add(result);
+                context.GameInProgress.Add(result);
+            }
+
+
+        
     }
+}
 }
