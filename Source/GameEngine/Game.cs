@@ -327,7 +327,7 @@ namespace GameEngine
                 {
                     var newPiece = new GamePiece((j + 1).ToString().First(), i);
                     newPiece.Row = loadedPieces[j].Row;
-                    newPiece.Col = loadedPieces[j].Row;
+                    newPiece.Col = loadedPieces[j].Col;
                     newPiece.IsPlacedOnBoard = loadedPieces[j].IsPlacedOnBoard;
                     newPiece.OnInnerPath = loadedPieces[j].OnInnerPath;
                     newPiece.HasFinished = loadedPieces[j].HasFinished;
