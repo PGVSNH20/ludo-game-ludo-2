@@ -11,6 +11,12 @@ namespace GameEngine.Classes
 {
     class Movement
     {
+        /// <summary>
+        /// Move a GamePiece and check if the move was valid.
+        /// </summary>
+        /// <param name="piece">GamePiece to move</param>
+        /// <param name="diceRoll">How far to move (dice)</param>
+        /// <returns>True if the move succeeded, else false</returns>
         public static bool MovePiece(GamePiece piece, int diceRoll)
         {
             Position position = GameBoardGenerator.FindObject(Game.GameBoard, piece);
@@ -82,6 +88,13 @@ namespace GameEngine.Classes
             return true;
         }
 
+        /// <summary>
+        /// Checks the index of a position on a path
+        /// </summary>
+        /// <param name="path">A list of positions</param>
+        /// <param name="pos">Position to check</param>
+        /// <param name="piece">I... don't know why this is here and too late to change</param>
+        /// <returns>The index in the list that the position is on, or -1</returns>
         private static int FindOnPath(List<Position> path, Position pos, GamePiece piece)
         {
             for (int i = 0; i < path.Count; i++)
@@ -94,6 +107,13 @@ namespace GameEngine.Classes
             return -1;
         }
 
+        /// <summary>
+        /// Check what happens when moving a piece to a position
+        /// </summary>
+        /// <param name="gamePiece">The piece to check</param>
+        /// <param name="position">The position to check</param>
+        /// <param name="isFinalStep">Is it the final position to check on a diceroll?</param>
+        /// <returns></returns>
         public static bool TryMove(GamePiece gamePiece, Position position, bool isFinalStep) // Jens måste kanske ta bort out. // Mattias tog bort den istället. //Fabian blev nöjd. //Belinda skrattade mycket.
         {
             var row = position.Row;
@@ -148,6 +168,12 @@ namespace GameEngine.Classes
             Game.SetStatusMessage($"Player {Game.Players[gamePiece.PlayerId].Color} moved piece {pieceID}.");
             return true;
         }
+        
+        /// <summary>
+        /// Get piece ID from index.
+        /// </summary>
+        /// <param name="piece"></param>
+        /// <returns>Piece ID</returns>
         static public int GetPieceIdFromIndex(GamePiece piece)
         {
             for (int i = 0; i < Game.Players[piece.PlayerId].Pieces.Count; i++)
@@ -158,6 +184,15 @@ namespace GameEngine.Classes
             return -1; 
                 
         }
+
+        /// <summary>
+        /// Jens wanted to use ref, so this is unused, probably because of that
+        /// </summary>
+        /// <param name="boardObj"></param>
+        /// <param name="playerID"></param>
+        /// <param name="isFinalStep"></param>
+        /// <param name="gamePiece"></param>
+        /// <returns></returns>
         public bool CheckTypeOfBoardSubjects(object boardObj, int playerID, bool isFinalStep, ref GamePiece gamePiece)
         {
 
@@ -193,11 +228,20 @@ namespace GameEngine.Classes
 
         }
 
+        /// <summary>
+        /// Get the color of a gamepiece.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>A color</returns>
         public ConsoleColor GetColorFrom(GamePiece id) => Game.Players[id.PlayerId].Color;
+
+        /// <summary>
+        /// When one piece knocks out another piece.
+        /// </summary>
+        /// <param name="piece">The piece that does the knocking</param>
         public static void Knuff(GamePiece piece)
         {
             piece.IsPlacedOnBoard = false;
         }
-
     }
 }

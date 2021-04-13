@@ -134,7 +134,7 @@ namespace GameEngine
                                     ActionMessage = $"'Spacebar' to move piece to board or choose a piece to move {diceRoll} steps!";
 
 
-                                } while (ValidAmountOFGamePieces(validRange) == false);
+                                } while (ValidAmountOfGamePieces(validRange) == false);
                             }
                         }
                         else
@@ -201,14 +201,25 @@ namespace GameEngine
                     return true;
                 }
 
-            } while (ValidAmountOFGamePieces(validRange) == false);
+            } while (ValidAmountOfGamePieces(validRange) == false);
             return false;
         }
 
+        /// <summary>
+        /// Set a message that will be displayed on next screen update.
+        /// </summary>
+        /// <param name="message">Text to display</param>
         public static void SetActionMessage(string message) => ActionMessage = message;
 
+        /// <summary>
+        /// Set a message that will be displayed on next screen update.
+        /// </summary>
+        /// <param name="message">Text to display</param>
         public static void SetStatusMessage(string message) => StatusMessage = message;
 
+        /// <summary>
+        /// Update current screen.
+        /// </summary>
         public void Update() => Draw.Update(Draw.Scene.Game, this);
 
         /// <summary>
@@ -230,10 +241,21 @@ namespace GameEngine
             return players;
         }
 
+        /// <summary>
+        /// End current turn
+        /// </summary>
         private void EndTurn() => activePlayer = activePlayer >= Rules.NumberOfPlayers - 1 ? 0 : activePlayer + 1;
 
+        /// <summary>
+        /// Read keyinput from user.
+        /// </summary>
+        /// <returns>The key that was pressed as a Char</returns>
         private char GetInput() => Console.ReadKey().KeyChar;
 
+        /// <summary>
+        /// Generate a list with chars and colors that can be drawn on screen.
+        /// </summary>
+        /// <returns>A drawable list containing chars and colors</returns>
         public static List<DrawableChar> GenerateDrawable()
         {
             List<DrawableChar> drawableChars = new List<DrawableChar>();
@@ -285,13 +307,19 @@ namespace GameEngine
             return drawableChars;
         }
 
+        /// <summary>
+        /// Checks if input is between 1 and the available amount of pieces.
+        /// </summary>
+        /// <param name="tempInput"></param>
+        /// <param name="outputRange"></param>
+        /// <returns>True or false</returns>
         bool ValidInputRange(char tempInput, out int outputRange)
         {
             //validInput = int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
 
             outputRange = -1;
 
-            if (int.TryParse(tempInput.ToString(), out int validInput) && ValidAmountOFGamePieces(validInput))
+            if (int.TryParse(tempInput.ToString(), out int validInput) && ValidAmountOfGamePieces(validInput))
             {
                 outputRange = validInput - 1;
                 return true;
@@ -300,10 +328,25 @@ namespace GameEngine
 
         }
 
-        bool ValidAmountOFGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
+        /// <summary>
+        /// Is int within range.
+        /// </summary>
+        /// <param name="input">Integer to check</param>
+        /// <returns>True or false</returns>
+        bool ValidAmountOfGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
 
+        /// <summary>
+        /// Check if the specified GamePiece is placed on the current gameboard.
+        /// </summary>
+        /// <param name="selectedPiece">GamePiece ID</param>
+        /// <param name="player">Associated player that contains pieces</param>
+        /// <returns>True or false</returns>
         bool IsGamePieceInGame(int selectedPiece, Player player) => player.Pieces[selectedPiece].IsPlacedOnBoard;
 
+        /// <summary>
+        /// Load from an existing game.
+        /// </summary>
+        /// <param name="saveGame">Saved game to load from</param>
         private void LoadGame(SaveGame saveGame)
         {
             var saveId = saveGame.SaveGameId;
