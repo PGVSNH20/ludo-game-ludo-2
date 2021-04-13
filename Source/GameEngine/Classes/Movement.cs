@@ -27,14 +27,7 @@ namespace GameEngine.Classes
 
             var onInnerPath = piece.OnInnerPath;
 
-            if (piece.OnInnerPath)
-            {
-                currentPath = Player.GetAllInnerPaths();
-            }
-            else // regular way
-            {
-                currentPath = Game.Traversable;
-            }
+            currentPath = piece.OnInnerPath ? Player.GetAllInnerPaths() : Game.Traversable;
 
             traversablePos = FindOnPath(currentPath, position, piece);
 
@@ -128,10 +121,8 @@ namespace GameEngine.Classes
             //TODO: Messaging here to keep the players slightly less confused
             if (originalBoard.GetType() == typeof(Goal) && isFinalStep)
             {
-                //TODO: Piece reached the goal logic
-                //TODO: Check gamestate and potentially finish the game
                 gamePiece.IsPlacedOnBoard = false;
-                /*gamePiece.OnInnerPath = false;*/ // Comment out?
+                gamePiece.OnInnerPath = false;
                 gamePiece.HasFinished = true;
                 Game.SetStatusMessage($"One of player {Game.Players[gamePiece.PlayerId].Color}'s pieces reached the goal!");
                 //On inner path still?
