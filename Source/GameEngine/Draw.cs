@@ -76,6 +76,7 @@ namespace GameEngine
                     //TODO: Draw results
                     DrawGameStatus(Game.StatusMessage);
                     DrawGameActionStatus(Game.ActionMessage);
+                    DrawButtonInfo();
 
                     
                     break;
@@ -131,6 +132,11 @@ namespace GameEngine
             ColorFormattedWriteLine(message);
         }
 
+        private static void DrawButtonInfo()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Roll dice: Spacebar | Select piece: 1-4 | Save game: 'S'");
+        }
 
         public static void DrawSavedGames(int selected)
         {
@@ -143,7 +149,6 @@ namespace GameEngine
 
             DrawMenu(result.ToArray(), selected);
         }
-
 
         public static void DrawMenu(string[] menu, int selected = 0)
         {
