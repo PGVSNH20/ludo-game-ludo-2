@@ -101,7 +101,6 @@ namespace GameEngine.Classes
                 {
                     
                     current = Draw.Scene.OptionsMenu;
-                    
                     Update();
 
                 }
