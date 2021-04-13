@@ -9,24 +9,14 @@ namespace GameEngine.Classes
 {
     public class Menu
     {
-        // Start new game, load game, exit
-        // 1. Start new game | 2. Load game | 3. High scores | 4. Exit game
-
-        // 1. -> Players (2-4): INPUT
-
-        // 2. -> Select a game to load: INPUT
-        // ^(list of savefiles from db)
-
-        // 3. -> (list of highscores from db)
-
-        // 4. -> Exit game? (y/n)
-
-
-
+      
         private Draw.Scene current = Draw.Scene.MainMenu;
         private int selectedOption = 0;
-        //TODO: Load rules from DB?
         private Rules rules = new Rules();
+
+        /// <summary>
+        /// Logic to step in the menu, start local game and start saved game from database.
+        /// </summary>
 
         public Menu()
         {
@@ -137,6 +127,10 @@ namespace GameEngine.Classes
 
         }
 
+        /// <summary>
+        /// Returns a string array with Startmenu choises.
+        /// </summary>
+        /// <returns></returns>
         public static string[] StartMenu()
         {
             
@@ -145,6 +139,10 @@ namespace GameEngine.Classes
             return startMenu;
         }
 
+        /// <summary>
+        /// Returns a string array with options to startmenu.
+        /// </summary>
+        /// <returns></returns>
         public static string[] OptionsStartNewGame()
         {
             string[] optionMenu = { "2", "3", "4" };
@@ -152,6 +150,10 @@ namespace GameEngine.Classes
             return optionMenu;
         }
 
+        /// <summary>
+        /// Returns a string array with saved highscores from database.
+        /// </summary>
+        /// <returns></returns>
         public static string[] HighScore()
         {
             string[] highScore = { "Något från databasen"};
@@ -159,30 +161,22 @@ namespace GameEngine.Classes
             return highScore;
         }
 
-
+        /// <summary>
+        /// Returns a string array with loaded games from method FromDB()
+        /// </summary>
+        /// <returns></returns>
         public static string[] LoadGame()
         {
-
             var listFromDB = FromDB();
-
-            //DateTime dateTime = DateTime.Now;
-            //int id = 1;
-            //string[] loadGame = { "Något sparat spel från databasen" };
 
             return new string[0];
         }
 
-        //private static List<string> FromDB()
-        //{
-
-        //    var listSavedGames = new List<string> { "1", "2", "3", }; 
-
-        //    //listSavedGames.Add("1"),
-                
-            
-            
-        //}
-
+        
+        /// <summary>
+        /// Method that saves saved games from database into a list and returns the list
+        /// </summary>
+        /// <returns></returns>
         private static List<SaveGame> FromDB()
         {
             var context = new DbModel();

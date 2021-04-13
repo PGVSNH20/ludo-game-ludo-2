@@ -33,6 +33,10 @@ namespace GameEngine
 
         }
 
+        /// <summary>
+        /// Method with a switch case that updates and changes to which part of the program to be displayed
+        /// </summary>
+        
         //TODO: Where and how should input be handled? Should we have an input manager-class/thingy or something that calls Draw?
         //TODO: Bigger draws might need own class, mainly the game's draw.
         public static void Update(Scene scene, Game game = null, int selected = 0)
@@ -73,14 +77,7 @@ namespace GameEngine
                     DrawGameStatus(Game.StatusMessage);
                     DrawGameActionStatus(Game.ActionMessage);
 
-                    /*
-                    INSERT BEAUTIFUL BOARD THAT JENS APPROVED THE COLORS OF
-
-                    Player Red knocked out Player Blue's piece.
-                    Player Green's turn. Roll the dice!
                     
-                    ...
-                    */
                     break;
 
             }
@@ -97,7 +94,9 @@ namespace GameEngine
             Console.WriteLine("\\____/\\__,_|\\__,_|\\___/");
             Console.WriteLine();
         }
-
+        /// <summary>
+        /// Different methods that we use to draw all the events in the game.
+        /// </summary>
         private static void DrawBoard()
         {
 
