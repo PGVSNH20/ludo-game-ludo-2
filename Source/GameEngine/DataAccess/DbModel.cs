@@ -48,7 +48,6 @@ namespace GameEngine
             modelBuilder.Entity<GamePiece>()
                 .Ignore(t => t.CharToDraw);
 
-
             base.OnModelCreating(modelBuilder);
         }
 

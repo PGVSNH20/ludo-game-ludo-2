@@ -158,7 +158,6 @@ namespace GameEngine
                                     Update();
                                     Thread.Sleep(1000);
                                 }
-
                             }
                         }
 
@@ -170,6 +169,7 @@ namespace GameEngine
                     StatusMessage = $"All {Players[activePlayer].Color} game pieces has reached the goal!";
                     ActionMessage = $"Yeaaaah! {Players[activePlayer].Color} won the game!";
                     Update();
+
                     DbModel.RemoveSaveGame(saveGame);
                     running = false;
                     Draw.Update(Draw.Scene.MainMenu);
