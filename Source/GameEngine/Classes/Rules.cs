@@ -12,7 +12,7 @@ namespace GameEngine.Classes
         public int RulesId { get; set; }
         [ForeignKey("SaveGame")]
         public int SaveGameId { get; set; } = -1;
-        public int NumberOfPlayers { get; set; }
+        public int NumberOfPlayers { get; set; } = 4;
         public int PiecesPerPlayer { get; set; }
         public bool ThrowAgainOnSixEnabled { get; set; }
 

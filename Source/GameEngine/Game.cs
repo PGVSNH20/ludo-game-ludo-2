@@ -27,8 +27,8 @@ namespace GameEngine
         public static string ActionMessage { get; set; }
         public static List<Player> Players { get; set; }
 
-        private static List<ConsoleColor> playerColors = new() { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow };
-        private static List<Position> startingPositions = new()
+        public static List<ConsoleColor> playerColors = new() { ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.Yellow };
+        public static List<Position> startingPositions = new()
         {
             new Position(0, 6),
             new Position(6, 10),
@@ -49,8 +49,8 @@ namespace GameEngine
             //Initializing
             Rules = rules; //TODO: Correct rules when loading for player count
             Players = AddPlayers(rules.NumberOfPlayers);
-            GameBoard = GameBoardGenerator.Generate(11, 11, Players);
-            OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players);
+            GameBoard = GameBoardGenerator.Generate(11, 11, Players, Rules.NumberOfPlayers);
+            OriginalGameBoard = GameBoardGenerator.Generate(11, 11, Players, Rules.NumberOfPlayers);
 
             //Loading for saved games
             if (saveGame != null)
@@ -125,6 +125,7 @@ namespace GameEngine
                                         //TODO: Validate the move
                                         activePiece = Players[activePlayer].Pieces[validRange];
                                         Movement.MovePiece(activePiece, diceRoll);
+                                        
                                         Update();
                                         Thread.Sleep(1500);
                                         break;
@@ -227,7 +228,7 @@ namespace GameEngine
         /// </summary>
         /// <param name="numberOfPlayers">How many players there are</param>
         /// <returns>A list populated with players</returns>
-        private List<Player> AddPlayers(int numberOfPlayers)
+        public List<Player> AddPlayers(int numberOfPlayers)
         {
             List<Player> players = new List<Player>();
 
@@ -240,7 +241,16 @@ namespace GameEngine
 
             return players;
         }
+        public static List<Player> AddPlayers(int numberOfPlayers, int piecesAmount, List<ConsoleColor> colors, List<Position> pos)
+        {
+            List<Player> players = new List<Player>();
+            for (int i = 0; i < numberOfPlayers; i++)
+            {
+                players.Add(new Player(piecesAmount, colors[i], i, pos[i]));
+            }
 
+            return players;
+        }
         /// <summary>
         /// End current turn
         /// </summary>
@@ -313,7 +323,7 @@ namespace GameEngine
         /// <param name="tempInput"></param>
         /// <param name="outputRange"></param>
         /// <returns>True or false</returns>
-        bool ValidInputRange(char tempInput, out int outputRange)
+        public  bool ValidInputRange(char tempInput, out int outputRange)
         {
             //validInput = int.TryParse(tempInput.ToString(), out int validInput) && validInput >= 1 && validInput <= 4)
 
@@ -327,13 +337,23 @@ namespace GameEngine
             else return false;
 
         }
+        public static bool ValidInputRange(char tempInput, out short outputRange)
+        {
+            outputRange = -1;
 
+            if (short.TryParse(tempInput.ToString(), out short validInput))
+            {
+                outputRange = --validInput;
+                return true;
+            }
+            else return false;
+        }
         /// <summary>
         /// Is int within range.
         /// </summary>
         /// <param name="input">Integer to check</param>
         /// <returns>True or false</returns>
-        bool ValidAmountOfGamePieces(int input) => input >= 1 && input <= Players[activePlayer].Pieces.Count; // Ska egentligen bara stå fyra här
+         bool ValidAmountOfGamePieces(int input) => input >= 1 && input <= Rules.NumberOfPlayers; // Ska egentligen bara stå fyra här
 
         /// <summary>
         /// Check if the specified GamePiece is placed on the current gameboard.

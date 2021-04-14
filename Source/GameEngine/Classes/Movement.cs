@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GameEngine.Classes
 {
-    class Movement
+    public class Movement
     {
         /// <summary>
         /// Move a GamePiece and check if the move was valid.

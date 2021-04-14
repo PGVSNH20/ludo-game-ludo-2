@@ -10,7 +10,7 @@ namespace GameEngine.Objects
 {
     public class GameBoardGenerator // satt den som public Jens för test
     {
-        public static IBoardObject[,] Generate(int columns, int rows, List<Player> players)
+        public static IBoardObject[,] Generate(int columns, int rows, List<Player> players, int numberOfPlayers)
         {
             IBoardObject[,] gameBoard = new IBoardObject[columns, rows];
 
@@ -25,7 +25,7 @@ namespace GameEngine.Objects
             gameBoard = PopulateWithNests(gameBoard, players); // Ytterligare en metod för population?
             gameBoard = PopulateWithEmptySpaces(gameBoard);
             //gameBoard = PopulateWithDoorWays(gameBoard, players);
-            gameBoard = PopulateWithInnerPath(gameBoard, players);
+            gameBoard = PopulateWithInnerPath(gameBoard, players, numberOfPlayers);
             gameBoard = PopulateWithGoal(gameBoard);
 
 
@@ -95,7 +95,7 @@ namespace GameEngine.Objects
 
             return gameBoard;
         }
-        private static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard, List<Player> players)
+        private static IBoardObject[,] PopulateWithInnerPath(IBoardObject[,] gameBoard, List<Player> players, int rulesNrPlayer)
         {
             var changeColorBasedOnInterval = -1;
 
@@ -105,7 +105,7 @@ namespace GameEngine.Objects
             {
                 if(!paths[i].Equals(new Position(5, 5)))
                 {
-                    if (i % (paths.Count / Game.Rules.NumberOfPlayers) == 0)
+                    if (i % (paths.Count / rulesNrPlayer) == 0)
                     {
                         ++changeColorBasedOnInterval;
                     }
@@ -123,6 +123,21 @@ namespace GameEngine.Objects
                 for (int j = 0; j < board.GetLength(1); j++)
                 {
                     if (board[i, j].Equals(obj))
+                    {
+                        return new Position(i, j);
+                    }
+                }
+            }
+
+            return new Position();
+        }
+        public static Position FindObjectWithSameChar(IBoardObject[,] board, IBoardObject obj)
+        {
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    if (board[i, j].CharToDraw == (obj).CharToDraw)
                     {
                         return new Position(i, j);
                     }

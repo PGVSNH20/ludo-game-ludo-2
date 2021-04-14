@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace GameEngine.Objects
 {
-    class Goal : IBoardObject
+    public class Goal : IBoardObject
     {
         public char CharToDraw => 'X';
     }
